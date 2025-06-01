@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_server
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: my_database
+    ports:
+      - "3306:3306"
+
+  rabbitmq:
+    image: rabbitmq:3.12.1-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"

@@ -1,0 +1,5313 @@
+{
+  "tags": [
+    {
+      "name": "Apis",
+      "description": "Operations available to manage API's"
+    },
+    {
+      "name": "Apps",
+      "description": "Operations available to manage App's"
+    },
+    {
+      "name": "Issuers",
+      "description": "Operations available to manage Issuers"
+    },
+    {
+      "name": "Roles",
+      "description": "Operations available to manage Roles. Determines what actions a user can do for the access session.\nWhat role to activate for a given access session is an authorization decision (authserver) taken based on:\n- the end user profile, as obtained from the [Telefonica Kernel User Profile API](https://developers.baikalplatform.com/apis/userprofile/)\n- the identifier used in the authentication\n- the LoA of the authentication\n\nAlso, please keep in mind that:\n- More than one role can be activated at the same time for the access session.\n- The same pi-scope can NOT coexist in several bounds (user_bound/identifier_bound/role_bound)"
+    },
+    {
+      "name": "Datasets",
+      "description": "Operations available to manage Datasets"
+    }
+  ],
+  "paths": {
+    "/apis/{api_id}/v{api_version}/swagger": {
+      "get": {
+        "security": [
+          {
+            "client_credentials": ["admin:apis:read"]
+          }
+        ],
+        "description": "Get the swagger for a version of an API, as you would consume it through Telefónica Kernel API gateway, therefore being a consumption swagger definition.\n**DISCLAIMER:** This endpoint is deprecated in favor of `/apis/{api_id}/v{api_version}/definition` endpoint",
+        "tags": ["Apis"],
+        "deprecated": true,
+        "operationId": "getApiSwagger",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ApiId"
+          },
+          {
+            "$ref": "#/components/parameters/ApiVersion"
+          },
+          {
+            "$ref": "#/components/parameters/x-correlator"
+          }
+        ],
+        "summary": "Get the swagger for a version of an API, as you would consume it through Telefónica Kernel API gateway",
+        "responses": {
+          "200": {
+            "headers": {
+              "x-correlator": {
+                "$ref": "#/components/headers/x-correlator"
+              }
+            },
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiActionAnyContent"
+                },
+                "examples": {
+                  "Example": {
+                    "value": {
+                      "rest of swagger": "omitted from the example",
+                      "swagger": "2.0",
+                      "info": {
+                        "contact": {
+                          "name": "Telefónica Kernel Team",
+                          "email": "telefonica-kernel@tid.es"
+                        },
+                        "description": "This API allows to retrieve the profile information of a user within the operator...",
+                        "termsOfService": "https://www.telefonica.es/es/",
+                        "title": "User Profile",
+                        "version": "3.4.2"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400InvalidArgument"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403PermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500Internal"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503Unavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504Timeout"
+          }
+        }
+      }
+    },
+    "/datasets/{id}/v{version}": {
+      "get": {
+        "security": [
+          {
+            "client_credentials": ["admin:datasets:read"]
+          }
+        ],
+        "description": "This operation returns a dataset version of a dataset ID, both parameters received in the path",
+        "tags": ["Datasets"],
+        "operationId": "getDatasetVersion",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ResourceId"
+          },
+          {
+            "$ref": "#/components/parameters/VersionId"
+          },
+          {
+            "$ref": "#/components/parameters/x-correlator"
+          }
+        ],
+        "summary": "Get a version of a dataset registered in Telefónica Kernel",
+        "responses": {
+          "200": {
+            "headers": {
+              "x-correlator": {
+                "$ref": "#/components/headers/x-correlator"
+              }
+            },
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DatasetVersion"
+                },
+                "examples": {
+                  "Example": {
+                    "value": {
+                      "schema": {
+                        "name": "MyData",
+                        "x-fp-version": "1.5.23-BETA",
+                        "type": "record",
+                        "fields": [
+                          {
+                            "name": "id",
+                            "type": "string",
+                            "x-fp-data-protection": "pseudonymize",
+                            "x-fp-user-id": true
+                          },
+                          {
+                            "name": "data_limit",
+                            "type": ["null", "int"],
+                            "default": null
+                          }
+                        ]
+                      },
+                      "retention_policy": {
+                        "vacuum": "P60D",
+                        "soft_delete": {
+                          "based_on": "date_partition"
+                        }
+                      },
+                      "pi_scopes": {
+                        "read": "geolocation-read",
+                        "write": "geolocation-write"
+                      },
+                      "not_informed_schema": {
+                        "name": "MyData",
+                        "x-fp-version": "1.5.23-BETA",
+                        "type": "record",
+                        "fields": [
+                          {
+                            "name": "id",
+                            "type": "string",
+                            "x-fp-data-protection": "pseudonymize",
+                            "x-fp-user-id": true
+                          },
+                          {
+                            "name": "data_limit",
+                            "type": ["null", "int"],
+                            "default": null
+                          }
+                        ]
+                      },
+                      "dataset_id": "smartsteps",
+                      "non_pi_scopes": {
+                        "read": "data:smartsteps:2:read",
+                        "write": "data:smartsteps:2:write"
+                      },
+                      "id": "smartsteps!2",
+                      "storage": {
+                        "type": "batch"
+                      },
+                      "version": 2,
+                      "recency": "PT1H",
+                      "stored_with_logical_types": true,
+                      "frequency": "hour"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400InvalidArgument"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403PermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500Internal"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503Unavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504Timeout"
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "client_credentials": ["admin:datasets:delete"]
+          }
+        ],
+        "description": "This operation removes from Kernel the version of dataset with the ID that received in the path",
+        "tags": ["Datasets"],
+        "operationId": "deleteDatasetVersion",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ResourceId"
+          },
+          {
+            "$ref": "#/components/parameters/VersionId"
+          },
+          {
+            "$ref": "#/components/parameters/x-correlator"
+          }
+        ],
+        "summary": "Delete a version of dataset registered in Telefónica Kernel",
+        "responses": {
+          "202": {
+            "headers": {
+              "x-correlator": {
+                "$ref": "#/components/headers/x-correlator"
+              }
+            },
+            "description": "Dataset deletion accepted. Please check the operation status through the operation endpoint",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResourceAccepted"
+                },
+                "examples": {
+                  "Example": {
+                    "value": {
+                      "resource_id": "smartsteps",
+                      "operation_id": "ff800938-6c7a-4652-922f-0c28635e6c05"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400InvalidArgument"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403PermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500Internal"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503Unavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504Timeout"
+          }
+        }
+      }
+    },
+    "/apps/{appId}/activate": {
+      "put": {
+        "security": [
+          {
+            "client_credentials": ["admin:apps:activate"]
+          }
+        ],
+        "description": "This status is used in Telefónica Kernel to determine if an app can be used or is pending to be validated. This operation activates an app so it can be used to request a token",
+        "tags": ["Apps"],
+        "operationId": "activateApp",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "The app id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/x-correlator"
+          }
+        ],
+        "summary": "Activate an App. An inactive app can't be used to request a token",
+        "responses": {
+          "202": {
+            "headers": {
+              "x-correlator": {
+                "$ref": "#/components/headers/x-correlator"
+              }
+            },
+            "description": "App activation accepted. Please check the operation status through the operation endpoint",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResourceAccepted"
+                },
+                "examples": {
+                  "Example": {
+                    "value": {
+                      "resource_id": "my-app",
+                      "operation_id": "31af6f9a-d8f9-4719-9d0b-a22020f03a36"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400InvalidArgument"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403PermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500Internal"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503Unavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504Timeout"
+          }
+        }
+      }
+    },
+    "/apps/{appId}/deactivate": {
+      "put": {
+        "security": [
+          {
+            "client_credentials": ["admin:apps:deactivate"]
+          }
+        ],
+        "description": "The status is used in Telefónica Kernel to determine if an app can be used or is pending to be validated. This operation deactivates an app so it can be used anymore to request a token",
+        "tags": ["Apps"],
+        "operationId": "deactivateApp",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "The app id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/x-correlator"
+          }
+        ],
+        "summary": "Deactivate an App. An inactive app can't be used to request a token",
+        "responses": {
+          "202": {
+            "headers": {
+              "x-correlator": {
+                "$ref": "#/components/headers/x-correlator"
+              }
+            },
+            "description": "App deactivation accepted. Please check the operation status through the operation endpoint",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResourceAccepted"
+                },
+                "examples": {
+                  "Example": {
+                    "value": {
+                      "resource_id": "my-app",
+                      "operation_id": "31af6f9a-d8f9-4719-9d0b-a22020f03a36"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400InvalidArgument"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403PermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500Internal"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503Unavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504Timeout"
+          }
+        }
+      }
+    },
+    "/apps/{appId}": {
+      "get": {
+        "security": [
+          {
+            "client_credentials": ["admin:apps:read", "admin:apps:read:self"]
+          }
+        ],
+        "description": "This operation retrieves information of an existing OAuth app in Telefónica Kernel",
+        "tags": ["Apps"],
+        "operationId": "getApp",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "The app id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/x-correlator"
+          }
+        ],
+        "summary": "Get an app",
+        "responses": {
+          "200": {
+            "headers": {
+              "x-correlator": {
+                "$ref": "#/components/headers/x-correlator"
+              }
+            },
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppDefinition"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400InvalidArgument"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403PermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500Internal"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503Unavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504Timeout"
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "client_credentials": ["admin:apps:delete"]
+          }
+        ],
+        "description": "This operation deletes an OAuth app from Telefónica Kernel",
+        "tags": ["Apps"],
+        "operationId": "deleteApp",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "The app id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/x-correlator"
+          }
+        ],
+        "summary": "Delete an app",
+        "responses": {
+          "202": {
+            "headers": {
+              "x-correlator": {
+                "$ref": "#/components/headers/x-correlator"
+              }
+            },
+            "description": "App deletion accepted. Please check the operation status through the operation endpoint",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationAccepted"
+                },
+                "examples": {
+                  "Example": {
+                    "value": {
+                      "operation_id": "2c491976-da06-4caa-931a-b4f8965339b8"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400InvalidArgument"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403PermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500Internal"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503Unavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504Timeout"
+          }
+        }
+      },
+      "put": {
+        "security": [
+          {
+            "client_credentials": [
+              "admin:apps:update",
+              "admin:apps:update:internal"
+            ]
+          }
+        ],
+        "description": "It updates the definition of an OAuth app. Internal apps are only allowed to be created with the scope \"admin:apps:update:internal\"",
+        "tags": ["Apps"],
+        "operationId": "updateApp",
+        "requestBody": {
+          "description": "The attributes to update the OAuth app",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AppUpdate"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "The app id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/x-correlator"
+          }
+        ],
+        "summary": "Update the definition of an OAuth app",
+        "responses": {
+          "202": {
+            "headers": {
+              "x-correlator": {
+                "$ref": "#/components/headers/x-correlator"
+              }
+            },
+            "description": "App update accepted. Please check the operation status through the operation endpoint",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResourceAccepted"
+                },
+                "examples": {
+                  "Example": {
+                    "value": {
+                      "resource_id": "my-app",
+                      "operation_id": "31af6f9a-d8f9-4719-9d0b-a22020f03a36"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400InvalidArgument"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403PermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500Internal"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503Unavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504Timeout"
+          }
+        }
+      }
+    },
+    "/datasets/{id}": {
+      "post": {
+        "security": [
+          {
+            "client_credentials": ["admin:datasets:create"]
+          }
+        ],
+        "description": "This operation registers a new dataset version in Kernel",
+        "tags": ["Datasets"],
+        "operationId": "createDatasetVersion",
+        "requestBody": {
+          "description": "The attributes to create the new dataset version",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DatasetVersionCreationRequest"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ResourceId"
+          },
+          {
+            "$ref": "#/components/parameters/x-correlator"
+          }
+        ],
+        "summary": "Create a new dataset version in Telefónica Kernel",
+        "responses": {
+          "202": {
+            "headers": {
+              "x-correlator": {
+                "$ref": "#/components/headers/x-correlator"
+              }
+            },
+            "description": "Dataset version creation accepted. Please check the operation status through the operation endpoint",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResourceAccepted"
+                },
+                "examples": {
+                  "Example": {
+                    "value": {
+                      "resource_id": "smartsteps",
+                      "operation_id": "be9a938d-7753-45af-a81a-9a5605ac30d6"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400InvalidArgument"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403PermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404NotFound"
+          },
+          "412": {
+            "$ref": "#/components/responses/Error412FailedPrecondition"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500Internal"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503Unavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504Timeout"
+          }
+        }
+      },
+      "get": {
+        "security": [
+          {
+            "client_credentials": ["admin:datasets:read"]
+          }
+        ],
+        "description": "This operation returns the dataset that matches the ID included in the path",
+        "tags": ["Datasets"],
+        "operationId": "getDataset",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ResourceId"
+          },
+          {
+            "$ref": "#/components/parameters/x-correlator"
+          }
+        ],
+        "summary": "Get a dataset registered in Telefónica Kernel",
+        "responses": {
+          "200": {
+            "headers": {
+              "x-correlator": {
+                "$ref": "#/components/headers/x-correlator"
+              }
+            },
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Dataset"
+                },
+                "examples": {
+                  "Example": {
+                    "value": {
+                      "versions": [
+                        {
+                          "version": 2,
+                          "full_version": "2.14.5",
+                          "namespace": "com.telefonica.mobile"
+                        }
+                      ],
+                      "contact": {
+                        "name": "John Doe",
+                        "email": "john.doe@example.org"
+                      },
+                      "description": "We use our platform to draw out insights about the global trends of groups of people, thus helping organizations to optimize their value proposition",
+                      "non_pi_scopes": {
+                        "read": "data:smartsteps:read",
+                        "write": "data:smartsteps:write"
+                      },
+                      "id": "smartsteps",
+                      "storage": "batch",
+                      "title": "Smart Steps",
+                      "contains_personal_information": true,
+                      "tags": {
+                        "URM": "stringExample"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400InvalidArgument"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403PermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500Internal"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503Unavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504Timeout"
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "client_credentials": ["admin:datasets:delete"]
+          }
+        ],
+        "description": "This operation removes from Kernel the dataset with the ID that received in the path",
+        "tags": ["Datasets"],
+        "operationId": "deleteDataset",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ResourceId"
+          },
+          {
+            "$ref": "#/components/parameters/x-correlator"
+          }
+        ],
+        "summary": "Delete a dataset registered in Telefónica Kernel",
+        "responses": {
+          "202": {
+            "headers": {
+              "x-correlator": {
+                "$ref": "#/components/headers/x-correlator"
+              }
+            },
+            "description": "Dataset deletion accepted. Please check the operation status through the operation endpoint",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResourceAccepted"
+                },
+                "examples": {
+                  "Example": {
+                    "value": {
+                      "resource_id": "smartsteps",
+                      "operation_id": "589a5c8a-60db-4371-b676-ea862f9ef8f3"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400InvalidArgument"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403PermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404NotFound"
+          },
+          "412": {
+            "$ref": "#/components/responses/Error412FailedPrecondition"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500Internal"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503Unavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504Timeout"
+          }
+        }
+      }
+    },
+    "/datasets": {
+      "post": {
+        "security": [
+          {
+            "client_credentials": ["admin:datasets:create"]
+          }
+        ],
+        "description": "This operation registers a new dataset in Kernel",
+        "tags": ["Datasets"],
+        "operationId": "createDataset",
+        "requestBody": {
+          "description": "The attributes to create the new dataset",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DatasetBase"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/x-correlator"
+          }
+        ],
+        "summary": "Create a new dataset in Telefónica Kernel",
+        "responses": {
+          "202": {
+            "headers": {
+              "x-correlator": {
+                "$ref": "#/components/headers/x-correlator"
+              }
+            },
+            "description": "Dataset creation accepted. Please check the operation status through the operation endpoint",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResourceAccepted"
+                },
+                "examples": {
+                  "Example": {
+                    "value": {
+                      "resource_id": "smartsteps",
+                      "operation_id": "9f568d05-44dc-4273-aca0-55ee01184164"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400InvalidArgument"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403PermissionDenied"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500Internal"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503Unavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504Timeout"
+          }
+        }
+      },
+      "get": {
+        "security": [
+          {
+            "client_credentials": ["admin:datasets:read"]
+          }
+        ],
+        "description": "This operation returns a list of all datasets registered in Kernel",
+        "tags": ["Datasets"],
+        "operationId": "listDatasets",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/x-correlator"
+          }
+        ],
+        "summary": "List all datasets registered in Telefónica Kernel",
+        "responses": {
+          "200": {
+            "headers": {
+              "x-correlator": {
+                "$ref": "#/components/headers/x-correlator"
+              }
+            },
+            "description": "Returns the list of datasets",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "List of datasets",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Dataset"
+                  }
+                },
+                "examples": {
+                  "Example": {
+                    "value": [
+                      {
+                        "id": "smartsteps",
+                        "title": "Smart Steps",
+                        "description": "We use our platform to draw out insights about the global trends of groups of people, thus helping organizations to optimize their value proposition",
+                        "contact": {
+                          "name": "John Doe",
+                          "email": "john.doe@example.org"
+                        },
+                        "storage": "batch",
+                        "tags": {
+                          "QA": "true",
+                          "URM": "true"
+                        },
+                        "non_pi_scopes": {
+                          "read": "data:smartsteps:read",
+                          "write": "data:smartsteps:write"
+                        },
+                        "contains_personal_information": true,
+                        "versions": [
+                          {
+                            "version": 2,
+                            "full_version": "2.14.5",
+                            "namespace": "com.telefonica.mobile"
+                          }
+                        ]
+                      },
+                      {
+                        "id": "apiOperation",
+                        "title": "API Operation metrics",
+                        "description": "Internal usage metrics",
+                        "contact": {
+                          "name": "Jane Doe",
+                          "email": "jane.doe@example.org"
+                        },
+                        "storage": "batch",
+                        "tags": {},
+                        "scopes": {
+                          "read": "data:apiOperation:read",
+                          "write": "data:apiOperation:write"
+                        },
+                        "non_pi_scopes": {
+                          "read": "data:apiOperation:read",
+                          "write": "data:apiOperation:write"
+                        },
+                        "contains_personal_information": false,
+                        "versions": [
+                          {
+                            "version": 1,
+                            "full_version": "1.0.3",
+                            "namespace": "com.telefonica"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400InvalidArgument"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403PermissionDenied"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500Internal"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503Unavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504Timeout"
+          }
+        }
+      }
+    },
+    "/datasets/{id}/v{version}/validations/{validationId}": {
+      "get": {
+        "security": [
+          {
+            "client_credentials": ["admin:datasets:validations:read"]
+          }
+        ],
+        "description": "This operation returns a validation for a dataset version registered in Telefónica Kernel with the requested ID",
+        "tags": ["Datasets"],
+        "operationId": "getDatasetValidation",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ResourceId"
+          },
+          {
+            "$ref": "#/components/parameters/VersionId"
+          },
+          {
+            "$ref": "#/components/parameters/ValidationId"
+          },
+          {
+            "$ref": "#/components/parameters/x-correlator"
+          }
+        ],
+        "summary": "Get validation for a dataset version registered in Telefónica Kernel",
+        "responses": {
+          "200": {
+            "headers": {
+              "x-correlator": {
+                "$ref": "#/components/headers/x-correlator"
+              }
+            },
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DatasetValidation"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400InvalidArgument"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403PermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500Internal"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503Unavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504Timeout"
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "client_credentials": ["admin:datasets:validations:delete"]
+          }
+        ],
+        "description": "This operation deletes a validation of a dataset version registered in Telefónica Kernel",
+        "tags": ["Datasets"],
+        "operationId": "deleteDatasetValidation",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ResourceId"
+          },
+          {
+            "$ref": "#/components/parameters/VersionId"
+          },
+          {
+            "$ref": "#/components/parameters/ValidationId"
+          },
+          {
+            "$ref": "#/components/parameters/x-correlator"
+          }
+        ],
+        "summary": "Delete a validation of a dataset version registered in Telefónica Kernel",
+        "responses": {
+          "202": {
+            "headers": {
+              "x-correlator": {
+                "$ref": "#/components/headers/x-correlator"
+              }
+            },
+            "description": "Validation deletion accepted. Please check the operation status through the operation endpoint",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResourceAccepted"
+                },
+                "examples": {
+                  "Example": {
+                    "value": {
+                      "resource_id": "smartsteps",
+                      "operation_id": "589a5c8a-60db-4371-b676-ea862f9ef8f3"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400InvalidArgument"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403PermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404NotFound"
+          },
+          "412": {
+            "$ref": "#/components/responses/Error412FailedPrecondition"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500Internal"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503Unavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504Timeout"
+          }
+        }
+      }
+    },
+    "/datasets/{id}/v{version}/history": {
+      "get": {
+        "security": [
+          {
+            "client_credentials": ["admin:datasets:read"]
+          }
+        ],
+        "description": "This operation returns an array of Avro schemas registered for a dataset version of a dataset ID, both parameters received in the path",
+        "tags": ["Datasets"],
+        "operationId": "getDatasetVersionHistory",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ResourceId"
+          },
+          {
+            "$ref": "#/components/parameters/VersionId"
+          },
+          {
+            "$ref": "#/components/parameters/x-correlator"
+          }
+        ],
+        "summary": "List the schema history of a dataset version registered in Telefónica Kernel",
+        "responses": {
+          "200": {
+            "headers": {
+              "x-correlator": {
+                "$ref": "#/components/headers/x-correlator"
+              }
+            },
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "List of Avro schema definitions",
+                  "type": "array",
+                  "items": {
+                    "description": "Avro schema definition",
+                    "type": "object"
+                  }
+                },
+                "examples": {
+                  "Example": {
+                    "value": [
+                      {
+                        "x-fp-version": "1.5.23-BETA",
+                        "type": "record",
+                        "name": "MyData",
+                        "fields": [
+                          {
+                            "name": "id",
+                            "type": "string",
+                            "x-fp-data-protection": "pseudonymize"
+                          },
+                          {
+                            "name": "data_limit",
+                            "type": "string"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400InvalidArgument"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403PermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500Internal"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503Unavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504Timeout"
+          }
+        }
+      }
+    },
+    "/issuers": {
+      "post": {
+        "security": [
+          {
+            "client_credentials": ["admin:issuers:create"]
+          }
+        ],
+        "description": "This operation creates a new OAuth issuer that can sign jwt assertions in Telefónica Kernel. The request body can include just one of these options: public_key_rsa, jwks or jwks_uri. It also let you create nullable tags",
+        "tags": ["Issuers"],
+        "operationId": "upsertIssuer",
+        "requestBody": {
+          "description": "The attributes to create the new OAuth issuer",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IssuerDefinition"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/x-correlator"
+          }
+        ],
+        "summary": "Create a new OAuth issuer that can sign jwt assertions in Telefónica Kernel",
+        "responses": {
+          "202": {
+            "headers": {
+              "x-correlator": {
+                "$ref": "#/components/headers/x-correlator"
+              }
+            },
+            "description": "Issuer creation accepted. Please check the operation status through the operation endpoint",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResourceAccepted"
+                },
+                "examples": {
+                  "Example": {
+                    "value": {
+                      "resource_id": "string",
+                      "operation_id": "18f3e645-fc86-4a20-b427-0d9ce9c548"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400InvalidArgument"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403PermissionDenied"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500Internal"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503Unavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504Timeout"
+          }
+        }
+      },
+      "get": {
+        "security": [
+          {
+            "client_credentials": ["admin:issuers:read"]
+          }
+        ],
+        "description": "This operation returns a list of all OAuth issuers registered in Telefónica Kernel and it can return either jwks_uri or a combination of public_key_rsa and jwks",
+        "tags": ["Issuers"],
+        "operationId": "listIssuers",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/x-correlator"
+          }
+        ],
+        "summary": "List all OAuth issuers registered in Telefónica Kernel",
+        "responses": {
+          "200": {
+            "headers": {
+              "x-correlator": {
+                "$ref": "#/components/headers/x-correlator"
+              }
+            },
+            "description": "Returns an array of issuers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "List of issuer definitions",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/IssuerDefinition"
+                  }
+                },
+                "examples": {
+                  "Example": {
+                    "value": [
+                      {
+                        "id": "string",
+                        "jwks_uri": "http://portal-backend:8080/jwks",
+                        "tags": {
+                          "qa": null,
+                          "admin": "gdpr"
+                        }
+                      },
+                      {
+                        "id": "string",
+                        "public_key_rsa": "-----BEGIN PUBLIC KEY-----\nxxx\nyyy\n-----END PUBLIC KEY-----",
+                        "jwks": "{\"kty\":\"RSA\",\"e\":\"AQMB\",\"n\":\"vxSvLM_qZbP-3n2Q\"}",
+                        "tags": {}
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400InvalidArgument"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403PermissionDenied"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500Internal"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503Unavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504Timeout"
+          }
+        }
+      }
+    },
+    "/apps/{appId}/rotate-encryption-key": {
+      "post": {
+        "security": [
+          {
+            "client_credentials": [
+              "admin:apps:update",
+              "admin:apps:update:internal"
+            ]
+          }
+        ],
+        "description": "This encryption key is used internally by Telefónica Kernel to pseudonymize personal information for datasets this app has access to",
+        "tags": ["Apps"],
+        "operationId": "rotateEncryptionKey",
+        "parameters": [
+          {
+            "name": "appId",
+            "in": "path",
+            "description": "The app id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/x-correlator"
+          }
+        ],
+        "summary": "Rotate encryption key associated to the current client",
+        "responses": {
+          "202": {
+            "headers": {
+              "x-correlator": {
+                "$ref": "#/components/headers/x-correlator"
+              }
+            },
+            "description": "Encryption key rotation accepted. Please check the operation status through the operation endpoint",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResourceAccepted"
+                },
+                "examples": {
+                  "Example": {
+                    "value": {
+                      "resource_id": "my-app",
+                      "operation_id": "31af6f9a-d8f9-4719-9d0b-a22020f03a36"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400InvalidArgument"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403PermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500Internal"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503Unavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504Timeout"
+          }
+        }
+      }
+    },
+    "/roles": {
+      "post": {
+        "security": [
+          {
+            "client_credentials": ["admin:role:create"]
+          }
+        ],
+        "description": "This operation creates a new role in Telefónica Kernel",
+        "tags": ["Roles"],
+        "operationId": "createRole",
+        "requestBody": {
+          "description": "The attributes to create the new role",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Role"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/x-correlator"
+          }
+        ],
+        "summary": "Create a new Role in Telefónica Kernel",
+        "responses": {
+          "202": {
+            "headers": {
+              "x-correlator": {
+                "$ref": "#/components/headers/x-correlator"
+              }
+            },
+            "description": "Role creation accepted. Please check the operation status through the operation endpoint",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResourceAccepted"
+                },
+                "examples": {
+                  "Example": {
+                    "value": {
+                      "resource_id": "string",
+                      "operation_id": "43921c29-77c2-4701-a1fd-823ed0348ebc"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400InvalidArgument"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403PermissionDenied"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500Internal"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503Unavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504Timeout"
+          }
+        }
+      },
+      "get": {
+        "security": [
+          {
+            "client_credentials": ["admin:role:read"]
+          }
+        ],
+        "description": "This operation returns the list of all Telefónica Kernel registered roles",
+        "tags": ["Roles"],
+        "operationId": "listRoles",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/x-correlator"
+          }
+        ],
+        "summary": "List all Telefónica Kernel registered roles",
+        "responses": {
+          "200": {
+            "headers": {
+              "x-correlator": {
+                "$ref": "#/components/headers/x-correlator"
+              }
+            },
+            "description": "Returns the list of roles",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "List of roles",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Role"
+                  }
+                },
+                "examples": {
+                  "Example": {
+                    "value": [
+                      {
+                        "user_bound_scopes": [
+                          "bill_details",
+                          "invoice-shipment-phone-number-read",
+                          "legados-offers-read",
+                          "userprofile-search-name",
+                          "product-offers-user-read"
+                        ],
+                        "tags": {
+                          "qa": null,
+                          "admin": "gdpr"
+                        },
+                        "id": "user",
+                        "role_bound_scopes": [],
+                        "minimum_loa": "1",
+                        "identifier_bound_scopes": [
+                          "clients-identifier-consents-create",
+                          "clients-identifier-consents-read",
+                          "identifier-consents-update"
+                        ]
+                      },
+                      {
+                        "user_bound_scopes": [
+                          "telco-testCLT-read",
+                          "telco-account-write"
+                        ],
+                        "tags": {},
+                        "id": "owner",
+                        "role_bound_scopes": [
+                          "telco-usageSummary-read",
+                          "timeline-phone-number-read",
+                          "mobile-balance-paid-top-up-write"
+                        ],
+                        "minimum_loa": "3",
+                        "identifier_bound_scopes": [
+                          "clients-identifier-consents-create",
+                          "clients-identifier-consents-read"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400InvalidArgument"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403PermissionDenied"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500Internal"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503Unavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504Timeout"
+          }
+        }
+      }
+    },
+    "/apis": {
+      "post": {
+        "security": [
+          {
+            "client_credentials": ["admin:apis:create"]
+          }
+        ],
+        "description": "This operation creates a new version of an existing or new API in Telefónica Kernel",
+        "tags": ["Apis"],
+        "operationId": "createApi",
+        "requestBody": {
+          "description": "In order to create new APIs, an API definition file must be provided. Please check Telefónica Kernel's user guide for more information",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApiProvision"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/x-correlator"
+          }
+        ],
+        "summary": "Register a new version of an existing or new API in Telefónica Kernel",
+        "responses": {
+          "202": {
+            "headers": {
+              "x-correlator": {
+                "$ref": "#/components/headers/x-correlator"
+              }
+            },
+            "description": "API creation accepted. Please check the operation status through the operation endpoint",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationAccepted"
+                },
+                "examples": {
+                  "Example": {
+                    "value": {
+                      "operation_id": "aaa814fc-00bd-4228-a339-235d70b9eb5b"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400InvalidArgument"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403PermissionDenied"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500Internal"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503Unavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504Timeout"
+          }
+        }
+      },
+      "get": {
+        "security": [
+          {
+            "client_credentials": ["admin:apis:read"]
+          }
+        ],
+        "description": "This operation returns a summary of the details for registered APIs and versions in Telefónica Kernel. Summary does not include the contents of api definitions",
+        "tags": ["Apis"],
+        "operationId": "getApis",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/TagFilter"
+          },
+          {
+            "$ref": "#/components/parameters/x-correlator"
+          }
+        ],
+        "summary": "List all registered APIs in Telefónica Kernel",
+        "responses": {
+          "200": {
+            "headers": {
+              "x-correlator": {
+                "$ref": "#/components/headers/x-correlator"
+              }
+            },
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "List of API summaries",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BaikalApiSummary"
+                  }
+                },
+                "examples": {
+                  "Example": {
+                    "value": [
+                      {
+                        "id": "mobile-quota",
+                        "version": 3,
+                        "title": "Mobile Quota",
+                        "description": "Allows to get currently applicable mobile quota information for voice, data, sms, mms, and money of a specific mobile phone number or for every mobile phone number of a user...",
+                        "scopes": [
+                          {
+                            "id": "mobile-quota-read",
+                            "name": "Mobile quota read",
+                            "guards_personal_information": true
+                          },
+                          {
+                            "id": "mobile-quota-user-read",
+                            "name": "Mobile quota user read",
+                            "guards_personal_information": true
+                          }
+                        ],
+                        "contact": {
+                          "name": "Telefónica Kernel Team"
+                        },
+                        "verify_identifiers": true,
+                        "enforce_id_bound_scopes": true,
+                        "tags": {}
+                      },
+                      {
+                        "id": "invoicing",
+                        "version": 2,
+                        "title": "Invoicing",
+                        "description": "Retrieve invoices for users....",
+                        "scopes": [
+                          {
+                            "id": "invoicing-user-read",
+                            "name": "Invoicing User read",
+                            "guards_personal_information": true
+                          },
+                          {
+                            "id": "invoicing-phone-number-read",
+                            "name": "Invoicing Phone Number read",
+                            "guards_personal_information": true
+                          }
+                        ],
+                        "contact": {
+                          "name": "Telefónica Kernel Team"
+                        },
+                        "verify_identifiers": true,
+                        "enforce_id_bound_scopes": true,
+                        "tags": {}
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400InvalidArgument"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403PermissionDenied"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500Internal"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503Unavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504Timeout"
+          }
+        }
+      }
+    },
+    "/apis/{api_id}/v{api_version}": {
+      "get": {
+        "security": [
+          {
+            "client_credentials": ["admin:apis:read"]
+          }
+        ],
+        "description": "Retrieve a specific API by ID and version. Details include the API definition",
+        "tags": ["Apis"],
+        "operationId": "getApi",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ApiId"
+          },
+          {
+            "$ref": "#/components/parameters/ApiVersion"
+          },
+          {
+            "$ref": "#/components/parameters/x-correlator"
+          }
+        ],
+        "summary": "Get a version of an API from Telefónica Kernel",
+        "responses": {
+          "200": {
+            "headers": {
+              "x-correlator": {
+                "$ref": "#/components/headers/x-correlator"
+              }
+            },
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaikalApiDefinition"
+                },
+                "examples": {
+                  "Example": {
+                    "value": {
+                      "enforce_id_bound_scopes": true,
+                      "contact": {
+                        "name": "Telefónica Kernel Team"
+                      },
+                      "api_definition": {
+                        "rest of api definition": "omitted from the example",
+                        "swagger": "2.0",
+                        "info": {
+                          "contact": {
+                            "name": "Telefónica Kernel Team",
+                            "email": "telefonica-kernel@tid.es"
+                          },
+                          "description": "Consult user profile information",
+                          "termsOfService": "https://www.telefonica.es/es/",
+                          "title": "User profile information",
+                          "version": "2.0.0"
+                        }
+                      },
+                      "description": "Consult user profile information",
+                      "id": "userprofile",
+                      "scopes": [
+                        {
+                          "id": "userprofile-search",
+                          "name": "Search Userprofile",
+                          "guards_personal_information": true
+                        },
+                        {
+                          "id": "userprofile-read",
+                          "name": "Read Userprofile",
+                          "guards_personal_information": true
+                        }
+                      ],
+                      "title": "User profile information",
+                      "version": 2,
+                      "verify_identifiers": true,
+                      "tags": {}
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400InvalidArgument"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403PermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500Internal"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503Unavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504Timeout"
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "client_credentials": ["admin:apis:delete"]
+          }
+        ],
+        "description": "This operation will remove a specific version of an API from the API gateway and its associated scopes from the authorization server",
+        "tags": ["Apis"],
+        "operationId": "deleteApi",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ApiId"
+          },
+          {
+            "$ref": "#/components/parameters/ApiVersion"
+          },
+          {
+            "$ref": "#/components/parameters/x-correlator"
+          }
+        ],
+        "summary": "Delete a version of an API from Telefónica Kernel",
+        "responses": {
+          "202": {
+            "headers": {
+              "x-correlator": {
+                "$ref": "#/components/headers/x-correlator"
+              }
+            },
+            "description": "API deletion accepted. Please check the operation status through the operation endpoint",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationAccepted"
+                },
+                "examples": {
+                  "Example": {
+                    "value": {
+                      "operation_id": "bba814fc-00bd-4228-a339-235d70b9eb5b"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400InvalidArgument"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403PermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500Internal"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503Unavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504Timeout"
+          }
+        }
+      },
+      "put": {
+        "security": [
+          {
+            "client_credentials": ["admin:apis:update"]
+          }
+        ],
+        "description": "This operation updates the definition on a version of an API in Telefónica Kernel, based on the API definition and configuration parameters (e.g. authentication, cors...) provided",
+        "tags": ["Apis"],
+        "operationId": "updateApi",
+        "requestBody": {
+          "description": "The API definition and configuration values",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApiProvision"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ApiId"
+          },
+          {
+            "$ref": "#/components/parameters/ApiVersion"
+          },
+          {
+            "$ref": "#/components/parameters/x-correlator"
+          }
+        ],
+        "summary": "Update the definition on a version of an API in Telefónica Kernel.",
+        "responses": {
+          "202": {
+            "headers": {
+              "x-correlator": {
+                "$ref": "#/components/headers/x-correlator"
+              }
+            },
+            "description": "Api update accepted. Please check the operation status through the operation endpoint",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationAccepted"
+                },
+                "examples": {
+                  "Example": {
+                    "value": {
+                      "operation_id": "cca814fc-00bd-4228-a339-235d70b9eb5b"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400InvalidArgument"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403PermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500Internal"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503Unavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504Timeout"
+          }
+        }
+      }
+    },
+    "/apis/{api_id}/v{api_version}/definition": {
+      "get": {
+        "security": [
+          {
+            "client_credentials": ["admin:apis:read"]
+          }
+        ],
+        "description": "This operation provides the definition for a version of an API, as you would consume it through the Telefónica Kernel API gateway, therefore being a consumption format definition",
+        "tags": ["Apis"],
+        "operationId": "getApiDefinition",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ApiId"
+          },
+          {
+            "$ref": "#/components/parameters/ApiVersion"
+          },
+          {
+            "$ref": "#/components/parameters/x-correlator"
+          }
+        ],
+        "summary": "Get the definition for a version of an API, as you would consume it through the Telefónica Kernel API gateway",
+        "responses": {
+          "200": {
+            "headers": {
+              "x-correlator": {
+                "$ref": "#/components/headers/x-correlator"
+              }
+            },
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiActionAnyContent"
+                },
+                "examples": {
+                  "Example": {
+                    "value": {
+                      "rest of api definition": "omitted from the example",
+                      "swagger": "2.0",
+                      "info": {
+                        "contact": {
+                          "name": "Telefónica Kernel Team",
+                          "email": "telefonica-kernel@tid.es"
+                        },
+                        "description": "This API allows to retrieve the profile information of a user within the operator...",
+                        "termsOfService": "https://www.telefonica.es/es/",
+                        "title": "User Profile",
+                        "version": "3.4.2"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400InvalidArgument"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403PermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500Internal"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503Unavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504Timeout"
+          }
+        }
+      }
+    },
+    "/apis/{api_id}": {
+      "get": {
+        "security": [
+          {
+            "client_credentials": ["admin:apis:read"]
+          }
+        ],
+        "description": "Retrieve all versions of a specific API by ID. Details per API and version include the API definition",
+        "tags": ["Apis"],
+        "operationId": "getApisById",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ApiId"
+          },
+          {
+            "$ref": "#/components/parameters/x-correlator"
+          }
+        ],
+        "summary": "List all versions of an API from Telefónica Kernel",
+        "responses": {
+          "200": {
+            "headers": {
+              "x-correlator": {
+                "$ref": "#/components/headers/x-correlator"
+              }
+            },
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "List of API definitions",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BaikalApiDefinition"
+                  }
+                },
+                "examples": {
+                  "Example": {
+                    "value": [
+                      {
+                        "id": "userprofile",
+                        "version": 2,
+                        "title": "User profile information",
+                        "description": "Consult user profile information",
+                        "scopes": [
+                          {
+                            "id": "userprofile-search",
+                            "name": "Search Userprofile",
+                            "guards_personal_information": true
+                          },
+                          {
+                            "id": "userprofile-read",
+                            "name": "Read Userprofile",
+                            "guards_personal_information": true
+                          }
+                        ],
+                        "contact": {
+                          "name": "Telefónica Kernel Team"
+                        },
+                        "api_definition": {
+                          "swagger": "2.0",
+                          "info": {
+                            "description": "Consult user profile information",
+                            "version": "2.0.0",
+                            "title": "User profile information",
+                            "termsOfService": "https://www.telefonica.es/es/",
+                            "contact": {
+                              "name": "Telefónica Kernel Team",
+                              "email": "telefonica-kernel@tid.es"
+                            }
+                          },
+                          "rest of api definition": "omitted from the example"
+                        },
+                        "verify_identifiers": true,
+                        "enforce_id_bound_scopes": true,
+                        "tags": {}
+                      },
+                      {
+                        "id": "userprofile",
+                        "version": 3,
+                        "title": "User Profile",
+                        "description": "This API allows to retrieve the profile information of a user within the operator...",
+                        "scopes": [
+                          {
+                            "id": "userprofile-search",
+                            "name": "Search Userprofile",
+                            "guards_personal_information": true
+                          },
+                          {
+                            "id": "userprofile-search-name",
+                            "name": "Search Userprofile Name",
+                            "guards_personal_information": true
+                          },
+                          {
+                            "id": "userprofile-search-id-document",
+                            "name": "Search Userprofile ID Document",
+                            "guards_personal_information": true
+                          }
+                        ],
+                        "contact": {
+                          "name": "Telefónica Kernel Team"
+                        },
+                        "api_definition": {
+                          "swagger": "2.0",
+                          "info": {
+                            "description": "This API allows to retrieve the profile information of a user within the operator...",
+                            "version": "3.4.2",
+                            "title": "User Profile",
+                            "termsOfService": "https://www.telefonica.es/es/",
+                            "contact": {
+                              "name": "Telefónica Kernel Team",
+                              "email": "telefonica-kernel@tid.es"
+                            }
+                          },
+                          "rest of api definition": "omitted from the example"
+                        },
+                        "verify_identifiers": true,
+                        "enforce_id_bound_scopes": true,
+                        "tags": {}
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400InvalidArgument"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403PermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500Internal"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503Unavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504Timeout"
+          }
+        }
+      }
+    },
+    "/roles/{id}": {
+      "get": {
+        "security": [
+          {
+            "client_credentials": ["admin:role:read"]
+          }
+        ],
+        "description": "This operation returns the Telefónica Kernel role with the requested ID",
+        "tags": ["Roles"],
+        "operationId": "getRole",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ResourceId"
+          },
+          {
+            "$ref": "#/components/parameters/x-correlator"
+          }
+        ],
+        "summary": "Return the requested role, registered in Telefónica Kernel",
+        "responses": {
+          "200": {
+            "headers": {
+              "x-correlator": {
+                "$ref": "#/components/headers/x-correlator"
+              }
+            },
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Role"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400InvalidArgument"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403PermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500Internal"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503Unavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504Timeout"
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "client_credentials": ["admin:role:delete"]
+          }
+        ],
+        "description": "This operation deletes a Telefónica Kernel registered Role",
+        "tags": ["Roles"],
+        "operationId": "deleteRole",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ResourceId"
+          },
+          {
+            "$ref": "#/components/parameters/x-correlator"
+          }
+        ],
+        "summary": "Delete a Telefónica Kernel registered Role",
+        "responses": {
+          "202": {
+            "headers": {
+              "x-correlator": {
+                "$ref": "#/components/headers/x-correlator"
+              }
+            },
+            "description": "Role deletion accepted. Please check the operation status through the operation endpoint",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationAccepted"
+                },
+                "examples": {
+                  "Example": {
+                    "value": {
+                      "operation_id": "7fa814fc-00bd-4228-a339-235d70b9eb5b"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400InvalidArgument"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403PermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500Internal"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503Unavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504Timeout"
+          }
+        }
+      },
+      "put": {
+        "security": [
+          {
+            "client_credentials": ["admin:role:update"]
+          }
+        ],
+        "description": "This operation updates a Telefónica Kernel registered Role",
+        "tags": ["Roles"],
+        "operationId": "updateRole",
+        "requestBody": {
+          "description": "The attributes to update the role",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RoleBase"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ResourceId"
+          },
+          {
+            "$ref": "#/components/parameters/x-correlator"
+          }
+        ],
+        "summary": "Update (overwrite) a Telefónica Kernel registered Role with the given body request information",
+        "responses": {
+          "202": {
+            "headers": {
+              "x-correlator": {
+                "$ref": "#/components/headers/x-correlator"
+              }
+            },
+            "description": "Role update accepted. Please check the operation status through the operation endpoint",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResourceAccepted"
+                },
+                "examples": {
+                  "Example": {
+                    "value": {
+                      "resource_id": "string",
+                      "operation_id": "a3dd3fe8-3638-4aa0-b72b-8b039978bd08"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400InvalidArgument"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403PermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500Internal"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503Unavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504Timeout"
+          }
+        }
+      }
+    },
+    "/api-validation": {
+      "post": {
+        "description": "This operation validates your registration API definition before registering your API, guaranteeing it has a suitable format",
+        "tags": ["Apis"],
+        "operationId": "validateApi",
+        "requestBody": {
+          "description": "An API definition JSON object to be validated",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApiActionAnyContent"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/x-correlator"
+          }
+        ],
+        "summary": "Validate your registration API definition before registering your API",
+        "responses": {
+          "200": {
+            "headers": {
+              "x-correlator": {
+                "$ref": "#/components/headers/x-correlator"
+              }
+            },
+            "description": "The input JSON object is a valid API definition for Telefónica Kernel. The resulting payload is the consumption API file for this instance of Telefónica Kernel",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiActionAnyContent"
+                },
+                "examples": {
+                  "Example": {
+                    "value": {
+                      "rest of api definition": "omitted from the example",
+                      "swagger": "2.0",
+                      "info": {
+                        "contact": {
+                          "name": "Telefónica Kernel Team",
+                          "email": "telefonica-kernel@tid.es"
+                        },
+                        "description": "This API allows to retrieve the profile information of a user within the operator...",
+                        "termsOfService": "https://www.telefonica.es/es/",
+                        "title": "User Profile",
+                        "version": "3.4.2"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400InvalidArgument"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403PermissionDenied"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500Internal"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503Unavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504Timeout"
+          }
+        }
+      }
+    },
+    "/issuers/{issuerId}": {
+      "get": {
+        "security": [
+          {
+            "client_credentials": ["admin:issuers:read"]
+          }
+        ],
+        "description": "This operation returns the OAuth issuer registered in Telefónica Kernel with the requested ID and it can return either jwks_uri or a combination of public_key_rsa and jwks",
+        "tags": ["Issuers"],
+        "operationId": "getIssuer",
+        "parameters": [
+          {
+            "name": "issuerId",
+            "in": "path",
+            "description": "The issuer id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/x-correlator"
+          }
+        ],
+        "summary": "Return the OAuth issuer registered in Telefónica Kernel with the requested ID",
+        "responses": {
+          "200": {
+            "headers": {
+              "x-correlator": {
+                "$ref": "#/components/headers/x-correlator"
+              }
+            },
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IssuerDefinition"
+                },
+                "examples": {
+                  "Example": {
+                    "value": {
+                      "jwks_uri": "http://portal-backend:8080/jwks",
+                      "id": "string",
+                      "tags": {}
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400InvalidArgument"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403PermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500Internal"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503Unavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504Timeout"
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "client_credentials": ["admin:issuers:delete"]
+          }
+        ],
+        "description": "Deletes the registered OAuth issuer with requested ID from Telefónica Kernel",
+        "tags": ["Issuers"],
+        "operationId": "deleteIssuer",
+        "parameters": [
+          {
+            "name": "issuerId",
+            "in": "path",
+            "description": "The issuer id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/x-correlator"
+          }
+        ],
+        "summary": "Delete the requested OAuth issuer registered in Telefónica Kernel",
+        "responses": {
+          "202": {
+            "headers": {
+              "x-correlator": {
+                "$ref": "#/components/headers/x-correlator"
+              }
+            },
+            "description": "Issuer deletion accepted. Please check the operation status through the operation endpoint",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationAccepted"
+                },
+                "examples": {
+                  "Example": {
+                    "value": {
+                      "operation_id": "18f3e645-fc86-4a20-b427-0d9ce9c548"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400InvalidArgument"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403PermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500Internal"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503Unavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504Timeout"
+          }
+        }
+      },
+      "put": {
+        "security": [
+          {
+            "client_credentials": ["admin:issuers:update"]
+          }
+        ],
+        "description": "This operation updates the OAuth issuer registered with requested ID in Telefónica Kernel. The request body can include just one of these options: public_key_rsa, jwks or jwks_uri",
+        "tags": ["Issuers"],
+        "operationId": "updateIssuer",
+        "requestBody": {
+          "description": "The attributes to update the OAuth issuer",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IssuerBase"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "issuerId",
+            "in": "path",
+            "description": "The issuer id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/x-correlator"
+          }
+        ],
+        "summary": "Update an OAuth issuer registered in Telefónica Kernel",
+        "responses": {
+          "202": {
+            "headers": {
+              "x-correlator": {
+                "$ref": "#/components/headers/x-correlator"
+              }
+            },
+            "description": "Issuer update accepted. Please check the operation status through the operation endpoint",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResourceAccepted"
+                },
+                "examples": {
+                  "Example": {
+                    "value": {
+                      "resource_id": "string",
+                      "operation_id": "18f3e645-fc86-4a20-b427-0d9ce9c548"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400InvalidArgument"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403PermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500Internal"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503Unavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504Timeout"
+          }
+        }
+      }
+    },
+    "/datasets/{id}/v{version}/validations": {
+      "post": {
+        "security": [
+          {
+            "client_credentials": ["admin:datasets:validations:create"]
+          }
+        ],
+        "description": "This operation creates a validation for a dataset version registered in Telefónica Kernel",
+        "tags": ["Datasets"],
+        "operationId": "createDatasetValidation",
+        "requestBody": {
+          "description": "The attributes to create the new validation",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DatasetValidationCreationRequest"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ResourceId"
+          },
+          {
+            "$ref": "#/components/parameters/VersionId"
+          },
+          {
+            "$ref": "#/components/parameters/x-correlator"
+          }
+        ],
+        "summary": "Create a new validation for a dataset version in Telefónica Kernel",
+        "responses": {
+          "202": {
+            "headers": {
+              "x-correlator": {
+                "$ref": "#/components/headers/x-correlator"
+              }
+            },
+            "description": "Validation creation accepted of Dataset version. Please check the operation status through the operation endpoint",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResourceAccepted"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400InvalidArgument"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403PermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404NotFound"
+          },
+          "409": {
+            "$ref": "#/components/responses/Error409AlreadyExists"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500Internal"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503Unavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504Timeout"
+          }
+        }
+      },
+      "get": {
+        "security": [
+          {
+            "client_credentials": ["admin:datasets:validations:read"]
+          }
+        ],
+        "description": "This operation returns the validations for a dataset version registered in Telefónica Kernel",
+        "tags": ["Datasets"],
+        "operationId": "getDatasetValidations",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ResourceId"
+          },
+          {
+            "$ref": "#/components/parameters/VersionId"
+          },
+          {
+            "$ref": "#/components/parameters/x-correlator"
+          }
+        ],
+        "summary": "Get validations for a dataset version registered in Telefónica Kernel",
+        "responses": {
+          "200": {
+            "headers": {
+              "x-correlator": {
+                "$ref": "#/components/headers/x-correlator"
+              }
+            },
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "List of dataset version validations",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DatasetValidation"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400InvalidArgument"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403PermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500Internal"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503Unavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504Timeout"
+          }
+        }
+      }
+    },
+    "/apps": {
+      "post": {
+        "security": [
+          {
+            "client_credentials": [
+              "admin:apps:create",
+              "admin:apps:create:internal"
+            ]
+          }
+        ],
+        "description": "Create a new OAuth app that can consume APIs in Telefónica Kernel. Internal apps are only allowed to be created with the scope \"admin:apps:create:internal\"",
+        "tags": ["Apps"],
+        "operationId": "createApp",
+        "requestBody": {
+          "description": "The attributes to create the new OAuth app",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AppCreation"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/x-correlator"
+          }
+        ],
+        "summary": "Create a new OAuth app that can consume APIs in Telefónica Kernel",
+        "responses": {
+          "202": {
+            "headers": {
+              "x-correlator": {
+                "$ref": "#/components/headers/x-correlator"
+              }
+            },
+            "description": "App creation accepted. Please check the operation status through the operation endpoint",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResourceAccepted"
+                },
+                "examples": {
+                  "Example": {
+                    "value": {
+                      "resource_id": "my-app",
+                      "operation_id": "e8e67ed5-6d41-409b-a45e-82060f49b866"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400InvalidArgument"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403PermissionDenied"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500Internal"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503Unavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504Timeout"
+          }
+        }
+      },
+      "get": {
+        "security": [
+          {
+            "client_credentials": ["admin:apps:read", "admin:apps:read:self"]
+          }
+        ],
+        "description": "Retrieve all OAuth apps registered in Telefónica Kernel",
+        "tags": ["Apps"],
+        "operationId": "listApps",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/TagFilter"
+          },
+          {
+            "$ref": "#/components/parameters/LegalEntityFilter"
+          },
+          {
+            "$ref": "#/components/parameters/LegalEntityNegationFilter"
+          },
+          {
+            "$ref": "#/components/parameters/PurposeFilter"
+          },
+          {
+            "$ref": "#/components/parameters/PurposeNegationFilter"
+          },
+          {
+            "$ref": "#/components/parameters/x-correlator"
+          }
+        ],
+        "summary": "List all OAuth apps registered in Telefónica Kernel",
+        "responses": {
+          "200": {
+            "headers": {
+              "x-correlator": {
+                "$ref": "#/components/headers/x-correlator"
+              }
+            },
+            "description": "Returns the list of apps",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "List of app definitions",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AppDefinition"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400InvalidArgument"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403PermissionDenied"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500Internal"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503Unavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504Timeout"
+          }
+        }
+      }
+    }
+  },
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Baikal administration",
+    "description": "API to manage Baikal content.\n\n# Relevant Definitions and concepts\n\n- **Role**: A role unlocks a set of actions that the App, acting on behalf of a specific user, can do within an access session.\n- **Authentication Context Class Reference**: Authentication Context Class Reference (ACR) is the level of assurance class requested for the authentication. In essence it is an indication of how secure the authentication is requested.\n- **Level of Assurance**: the Level-of-Assurance (LoA) of the authentication, i.e. the ACR of the login. In this regard, each role has a minimum LoA that is needed to activate that role. For example, the user may need to authenticate with password to gain owner role privileges.",
+    "contact": {
+      "name": "Telefónica Kernel Team",
+      "email": "telefonica-kernel@tid.es"
+    },
+    "license": {
+      "name": "",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0"
+    },
+    "version": "2.51.0"
+  },
+  "components": {
+    "headers": {
+      "x-correlator": {
+        "schema": {
+          "type": "string"
+        },
+        "description": "Correlation id for the different services"
+      }
+    },
+    "schemas": {
+      "ModelError": {
+        "type": "object",
+        "required": ["code", "message"],
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "A code value within the allowed set of values for this error"
+          },
+          "message": {
+            "type": "string",
+            "description": "A human readable description of what the event represent"
+          }
+        }
+      },
+      "ActionAnyContent": {
+        "type": "object",
+        "description": "Object that represents an API definition. One of `api_definition` or `swagger` must be provided.\nDISCLAIMER: `swagger` is deprecated in favor of `api_definition` since `v2.33` of this API"
+      },
+      "ApiActionAnyContent": {
+        "type": "object",
+        "description": "Object that represents an API definition"
+      },
+      "AppDefinitionBase": {
+        "type": "object",
+        "description": "Base object for an App Definition",
+        "required": [
+          "name",
+          "description",
+          "grant_types",
+          "redirect_uris",
+          "legal_entity_id"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "A display name for your app",
+            "minLength": 1,
+            "maxLength": 200,
+            "example": "Telefónica Kernel Developer Portal"
+          },
+          "description": {
+            "type": "string",
+            "description": "A description of what your app does",
+            "minLength": 1,
+            "maxLength": 1000,
+            "example": "Telefónica Kernel Developer Portal allows adding assets to Telefónica Kernel"
+          },
+          "legal_entity_id": {
+            "type": "string",
+            "description": "Legal entity identifier",
+            "pattern": "^[a-zA-Z-:_0-9]{1,200}$",
+            "minLength": 1,
+            "maxLength": 200,
+            "example": "telefonica"
+          },
+          "http_callback": {
+            "type": "string",
+            "format": "uri",
+            "minLength": 1,
+            "maxLength": 200,
+            "description": "Default callback for subscription",
+            "example": "https://www.my-callback.com"
+          },
+          "requires_authorization_id": {
+            "type": "boolean",
+            "description": "Define if the authorization_id is mandatory in JWT",
+            "default": true
+          },
+          "encrypt_access_tokens": {
+            "type": "boolean",
+            "description": "Defines if the access_token is encrypted or not",
+            "default": true
+          },
+          "default_idp": {
+            "type": "string",
+            "description": "Default IDP for authenticate the clients of this app. In case this field is not set,Telefónica Kernel will use an IdP defined as default at platform level",
+            "example": "IDP_SAML_OAM"
+          },
+          "idp_for_loa": {
+            "type": "object",
+            "description": "Mapping for related acr_value with the default IDP for authenticate the clients of this app. in case this field is not set or set empty (\"idp_for_loa\": {}),Telefónica Kernel will use the mapping defined as default at platform level. This JSON object has to be build with tuples of acr_value -> idp. e.g.: { '2': 'IDP_SAML_OAM', '3': 'IDP_OIDC_OAM_1' }",
+            "example": {
+              "2": "IDP_SAML_OAM",
+              "3": "IDP_OIDC_OAM_1"
+            }
+          },
+          "access_token_validity_seconds": {
+            "type": "integer",
+            "description": "Define the expiration time of the access_token. If not included, Access Token expiration time will be the default one for the environment"
+          },
+          "refresh_token_validity_seconds": {
+            "type": "integer",
+            "description": "Define the expiration time of the refresh_token. If not included, Refresh Token expiration time will be the default one for the environment"
+          },
+          "refresh_token_renewable_expiration": {
+            "type": "boolean",
+            "description": "Defines if the refresh_token expiration time is renewed after its use or not.",
+            "default": true
+          },
+          "allowed_acr_values_jwt_bearer": {
+            "type": "array",
+            "description": "The list of acceptable ACR values for urn:ietf:params:oauth:grant-type:jwt-bearer. The values only will be considered in case of an external_login in which case, there must be at least one ACR. If it is empty no ACR is allowed",
+            "items": {
+              "type": "string",
+              "description": "ACR value"
+            },
+            "example": ["2", "3"],
+            "default": []
+          },
+          "ciba_delegated_consent": {
+            "type": "boolean",
+            "description": "If true, the User Consent must be given in advance by the User; if not, CIBA flow will not issue Access Token for purposes without an active Consent; nevertheless, Access Token may be issued for other valid purposes if several requested.\nIf false, User Consent capture flow will be triggered by Kernel as part of CIBA flow, and Access Token will be issued if Consent is given to every purpose requested",
+            "default": true
+          },
+          "ciba_allowed_identifier_types": {
+            "type": "array",
+            "description": "List of restricted identifier types to use by the client in the authorization request. Null or empty list mean no restriction",
+            "items": {
+              "type": "string",
+              "description": "Identifier type",
+              "enum": [
+                "phone_number",
+                "ip",
+                "anonymous_subscriber_id",
+                "tel",
+                "ipport"
+              ]
+            },
+            "example": ["phone_number", "ip", "anonymous_subscriber_id"],
+            "default": []
+          },
+          "ciba_consent_capture_mode": {
+            "type": "string",
+            "description": "The `OUT_OF_BAND` value indicates that the communications to capture consent will be made by an external channel other than the App, whereas for `IN_BAND` the consent will be captured by the App itself. This field only applies if `ciba_delegated_consent` is set to `false`. `IN_BAND` is the default value if this field is not set. In case of `IN_BAND` mode and when CIBA flow is used, the user consent capture flow with the App is triggered by Kernel returning a `consent_url`",
+            "enum": ["IN_BAND", "OUT_OF_BAND"],
+            "example": ["IN_BAND", "OUT_OF_BAND"],
+            "default": "IN_BAND"
+          },
+          "raw_dataset_read": {
+            "type": "boolean",
+            "description": "Defines if the app can access raw data (not pseudonymized)",
+            "default": false
+          },
+          "grant_types": {
+            "type": "array",
+            "description": "The different [OAuth grant types](https://tools.ietf.org/html/rfc6749#section-1.3) that your app will support",
+            "items": {
+              "$ref": "#/components/schemas/GrantType"
+            },
+            "example": [
+              {
+                "name": "urn:ietf:params:oauth:grant-type:jwt-bearer",
+                "scopes": ["admin:apis:create", "admin:apis:read"]
+              },
+              {
+                "name": "client_credentials",
+                "scopes": ["admin:apis:read"]
+              }
+            ]
+          },
+          "rate_limit": {
+            "type": "array",
+            "description": "The different Rate Limit that your app will support. If your client doesn't send this field, they will be had the default config of each environment",
+            "items": {
+              "$ref": "#/components/schemas/RateLimit"
+            },
+            "example": [
+              {
+                "limit_by": "jti",
+                "apply_to": ["scope1", "admin:apis:read"],
+                "minute": 6000
+              },
+              {
+                "limit_by": "jti",
+                "apply_to": ["admin:apis:write"],
+                "minute": 3000,
+                "hour": 180000
+              }
+            ]
+          },
+          "redirect_uris": {
+            "type": "array",
+            "description": "The list of acceptable redirection URIs that can be used as callback for the for the OAuth 2.0 authorization code flow (https://tools.ietf.org/html/rfc6749#section-3.1.2) or the OpenID Connect Logout procedure (https://openid.net/specs/openid-connect-session-1_0.html#RPLogout)",
+            "items": {
+              "type": "string",
+              "format": "uri",
+              "description": "Redirection URI"
+            },
+            "example": ["https://example.org"]
+          },
+          "client_type": {
+            "type": "string",
+            "description": "Client type",
+            "enum": ["CONFIDENTIAL", "PUBLIC_DESKTOP", "PUBLIC_MOBILE"],
+            "default": "CONFIDENTIAL"
+          },
+          "sso_expiration_seconds": {
+            "type": "integer",
+            "format": "int64",
+            "description": "SSO expiration in seconds. 90 days by default",
+            "default": 7776000
+          },
+          "tags": {
+            "$ref": "#/components/schemas/Tags"
+          },
+          "jwks_uri": {
+            "type": "string",
+            "format": "uri",
+            "description": "Public URL with public keys to enable JWT validation. This field is not compatible with 'secret' field. You can use one or the other but not both",
+            "example": "http://portal-backend:8080/jwks"
+          },
+          "privacy_policy_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Public url of the privacy policy",
+            "example": "https://agreementservice.svs.nike.com/es/es_es/rest/agreement?agreementType=privacyPolicy&uxId=com.nike.unite&country=ES&language=es&requestType=redirect"
+          },
+          "cookie_policy_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Public url of the cookie policy",
+            "example": "https://www.telefonica.com/es/cookies/"
+          },
+          "max_parallel_data_operations_requests": {
+            "type": "integer",
+            "description": "Defines the maximum number of parallel data operations which the app can request. If not included, this limit will be the default one for the environment"
+          }
+        }
+      },
+      "AppDefinition": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AppDefinitionBase"
+          },
+          {
+            "type": "object",
+            "required": ["id", "status", "internal"],
+            "properties": {
+              "http_callback_auth_type": {
+                "type": "string",
+                "enum": ["basic", "api_key", "assertion_jwt"]
+              },
+              "http_callback_auth": {
+                "type": "object",
+                "description": "External API authentication configuration. Only returned for `assertion_jwt` http_callback_auth_type due to security reasons",
+                "properties": {
+                  "assertion_jwt": {
+                    "$ref": "#/components/schemas/AssertionJwt"
+                  }
+                }
+              },
+              "id": {
+                "type": "string",
+                "description": "An identifier for your app",
+                "minLength": 1,
+                "maxLength": 200,
+                "example": "my-app"
+              },
+              "status": {
+                "type": "string",
+                "description": "App status. An inactive app can't be used to request a token",
+                "enum": ["ACTIVE", "INACTIVE"]
+              },
+              "internal": {
+                "type": "boolean",
+                "description": "Flag to determine if the app has internal management purposes"
+              }
+            }
+          }
+        ]
+      },
+      "AppUpdate": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AppDefinitionBase"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "secret": {
+                "type": "string",
+                "description": "The client secret you will use when performing an OAuth flow. In App creation, it must be sent for CONFIDENTIAL client_type, shall not be sent for PUBLIC_DESKTOP or PUBLIC_MOBILE client_type. In App update, may be sent for CONFIDENTIAL client_type, to update the secret, shall not be sent for PUBLIC_DESKTOP or PUBLIC_MOBILE client_type",
+                "minLength": 10,
+                "maxLength": 200,
+                "example": "dyabd0jyas1dnka1bsgd"
+              },
+              "http_callback_auth": {
+                "$ref": "#/components/schemas/Auth"
+              },
+              "hashing_config": {
+                "type": "object",
+                "description": "Configuration required for reading data-protected datasets in hashed mode",
+                "required": ["prefix", "suffix"],
+                "properties": {
+                  "prefix": {
+                    "type": "string",
+                    "description": "The prefix to be used when hashing data",
+                    "example": "dummy-prefix"
+                  },
+                  "suffix": {
+                    "type": "string",
+                    "description": "The suffix to be used when hashing data",
+                    "example": "dummy-suffix"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "AppCreation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AppUpdate"
+          },
+          {
+            "type": "object",
+            "required": ["id"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "The client id that you will use when performing an OAuth flow",
+                "pattern": "^[a-zA-Z-:_0-9]{1,200}$",
+                "example": "developer-portal"
+              },
+              "internal": {
+                "type": "boolean",
+                "description": "Flag to determine if the app has internal management purposes. Can only be sent with the value _true_ if scope \"admin:apps:create:internal\" is granted",
+                "default": false
+              }
+            }
+          }
+        ],
+        "example": {
+          "id": "developer-portal",
+          "secret": "asdrty765rfde",
+          "name": "Telefónica Kernel Developer Portal",
+          "description": "Telefónica Kernel Developer Portal allows adding assets to Telefónica Kernel",
+          "legal_entity_id": "telefonica",
+          "http_callback": "https://www.callback.com",
+          "grant_types": [
+            {
+              "name": "urn:ietf:params:oauth:grant-type:jwt-bearer",
+              "scopes": ["admin:apis:create", "admin:apis:read"]
+            },
+            {
+              "name": "client_credentials",
+              "scopes": ["admin:apis:read"]
+            }
+          ],
+          "redirect_uris": ["https://example.org"]
+        }
+      },
+      "GrantType": {
+        "type": "object",
+        "description": "Object that represents a grant type",
+        "required": ["name"],
+        "properties": {
+          "name": {
+            "$ref": "#/components/schemas/GrantTypeName"
+          },
+          "scopes": {
+            "type": "array",
+            "description": "The scopes that your app will be able to request",
+            "items": {
+              "type": "string",
+              "description": "Scope name"
+            }
+          },
+          "purposes": {
+            "type": "array",
+            "description": "The purposes that your app will be able to request",
+            "items": {
+              "type": "string",
+              "description": "Purpose name"
+            }
+          }
+        }
+      },
+      "GrantTypeName": {
+        "type": "string",
+        "enum": [
+          "password",
+          "authorization_code",
+          "urn:ietf:params:oauth:grant-type:jwt-bearer",
+          "client_credentials",
+          "urn:ietf:params:oauth:grant-type:device_code",
+          "urn:openid:params:grant-type:ciba",
+          "push_authorization"
+        ],
+        "description": "Grant Type name"
+      },
+      "RateLimit": {
+        "type": "object",
+        "description": "Object that represents a rate limit",
+        "required": ["minute"],
+        "properties": {
+          "limit_by": {
+            "type": "string",
+            "default": "client_id",
+            "description": "The parameter that control the request limits. JTI (JWT ID, unique identifier of the Access Token) is preferred when you want to limit the number of requests that can be made with the same Access Token. On the other hand, use `client_id` when you want to limit the traffic of an App globally",
+            "enum": ["client_id", "jti"]
+          },
+          "apply_to": {
+            "type": "array",
+            "description": "The scopes that your app will be able to request limits. If you don't send this field, this policy applies to all scopes of this client",
+            "items": {
+              "type": "string",
+              "description": "Scope name"
+            }
+          },
+          "second": {
+            "type": "integer",
+            "description": "The number of requests that your app will be able to handle for second"
+          },
+          "minute": {
+            "type": "integer",
+            "description": "The number of requests that your app will be able to handle for minute. You have to choose a mandatory value of requests per minute, but you can add others, such as requests per hour, month, and year if you want. For example, you may want that an app has a limit of 60 req/min to allow spikes of traffic but a max of 1200 req/hour (i.e. a mean value of 20 req/min)"
+          },
+          "hour": {
+            "type": "integer",
+            "description": "The number of requests that your app will be able to handle for hour"
+          },
+          "month": {
+            "type": "integer",
+            "description": "The number of requests that your app will be able to handle for month"
+          },
+          "year": {
+            "type": "integer",
+            "description": "The number of requests that your app will be able to handle for year"
+          }
+        }
+      },
+      "BaikalApiSummary": {
+        "type": "object",
+        "description": "Object that represents an API summary",
+        "required": [
+          "id",
+          "title",
+          "description",
+          "contact",
+          "scopes",
+          "version"
+        ],
+        "properties": {
+          "id": {
+            "description": "Identifier of the API",
+            "type": "string"
+          },
+          "title": {
+            "description": "Title of the API. As specified in API definition",
+            "type": "string"
+          },
+          "description": {
+            "description": "Description of the API. As specified in API definition",
+            "type": "string"
+          },
+          "version": {
+            "description": "Version of the API deployed in the environment",
+            "type": "number"
+          },
+          "contact": {
+            "$ref": "#/components/schemas/BaikalContact"
+          },
+          "scopes": {
+            "description": "List of scopes an pi-scopes defined for this API",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ScopeDetail"
+            }
+          },
+          "auth_type": {
+            "description": "Indicates the security applied by Telefónica Kernel APIGW to contact API Backend",
+            "type": "string",
+            "enum": ["basic", "api_key", "mtls", "basic_and_mtls"]
+          },
+          "cors": {
+            "$ref": "#/components/schemas/EnableCors"
+          },
+          "tags": {
+            "$ref": "#/components/schemas/Tags"
+          },
+          "verify_identifiers": {
+            "type": "boolean",
+            "default": true,
+            "description": "Flag to determine if the found identities must be validated against [Telefonica Kernel User Profile API](https://developers.baikalplatform.com/apis/userprofile/)"
+          },
+          "enforce_id_bound_scopes": {
+            "type": "boolean",
+            "default": true,
+            "description": "Flag to determine whether in case of accessing the API with an scope included in identifier_bound_scopes list, identifier(s) in such list must be validated against a parameter of the API (such parameter labelled with x-fp-identifier)"
+          },
+          "audit_full_request": {
+            "type": "boolean",
+            "default": true,
+            "description": "Flag to determine if the request body of API requests (i.e. real API requests of the API this provision refers to) has to be audited or not"
+          }
+        }
+      },
+      "ScopeDetail": {
+        "description": "Scope details",
+        "type": "object",
+        "required": ["id", "name", "guards_personal_information"],
+        "properties": {
+          "id": {
+            "description": "Unique identifier of the scope/pi-scope",
+            "type": "string"
+          },
+          "name": {
+            "description": "Friendly description of the scope",
+            "type": "string",
+            "x-user-friendly": true
+          },
+          "guards_personal_information": {
+            "description": "Whether this scope/pi-scope deals with personal information. It must be true for pi-scopes and false for regular scopes",
+            "type": "boolean"
+          }
+        },
+        "example": {
+          "id": "subscribed-products-user-read",
+          "name": "Subscribed products User read",
+          "guards_personal_information": true
+        }
+      },
+      "AssertionJwt": {
+        "type": "object",
+        "description": "Assertion JWT auth configuration. Provide standard **oAuth 2.0 client_credentials grant_type with authentication through jwt-assertion flow**, according to [RFC7521](https://www.rfc-editor.org/rfc/rfc7521.txt) and [RFC7523](https://www.rfc-editor.org/rfc/rfc7523.txt)",
+        "required": ["endpoint", "client_id", "aud", "iss", "scope"],
+        "properties": {
+          "endpoint": {
+            "type": "string",
+            "example": "https://login.microsoftonline.com/dummy/oauth2/v2.0/token",
+            "description": "Token exchange endpoint of the Authorization Server that exposes standard **oAuth 2.0 client_credentials grant_type with authentication through jwt-assertion flow**, providing an Access Token according to this procedure"
+          },
+          "client_id": {
+            "type": "string",
+            "example": "abb5a433-1a91-4711-b54c-61251b40f36a",
+            "description": "Represents the oauth client identifier that performs the **oAuth 2.0 client_credentials grant_type with authentication through jwt-assertion flow** towards the Authorization Server endpoint as configured in `endpoint` field.\n\nNOTE that the value of this field will be also used as `{sub}` claim of jwt-assertion generated, as per [RFC7523](https://www.rfc-editor.org/rfc/rfc7523.txt) section 3: _B.  For client authentication, the subject MUST be the \"client_id\" of the OAuth client._"
+          },
+          "aud": {
+            "type": "string",
+            "example": "https://login.microsoftonline.com/dummy/oauth2/v2.0/token",
+            "description": "It stands for audience. Identifies the recipients that the jwt-assertion is intended for.\n\nNOTE that the value of this field will be used as `{aud}` claim of jwt-assertion generated"
+          },
+          "iss": {
+            "type": "string",
+            "example": "abb5a433-1a91-4711-b54c-61251b40f36a",
+            "description": "It stands for issuer. Represents the issuer of the jwt-assertion.\n\nNOTE that the value of this field will be used as `{iss}` claim of jwt-assertion generated"
+          },
+          "scope": {
+            "type": "array",
+            "description": "List of scopes for which the Access Token is requested by means of this procedure. An empty array indicates that Access Token is requested for all the scopes allowed to requesting `client_id`",
+            "items": {
+              "type": "string",
+              "description": "Scope for which the Access Token is requested"
+            },
+            "example": ["https://graph.microsoft.com/.default"]
+          }
+        }
+      },
+      "Auth": {
+        "type": "object",
+        "description": "External API authentication configuration. Only one of basic, api_key or assertion_jwt can be configured (in create); leave empty object {} to remove, or omit to keep existing (in update)",
+        "properties": {
+          "basic": {
+            "type": "object",
+            "description": "Basic auth configuration",
+            "required": ["user", "password"],
+            "properties": {
+              "user": {
+                "type": "string",
+                "description": "identifier of the credential"
+              },
+              "password": {
+                "type": "string",
+                "description": "secret of the credential"
+              }
+            }
+          },
+          "api_key": {
+            "type": "object",
+            "description": "Api key auth configuration",
+            "required": ["name", "value", "in"],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "name of the `api_key`",
+                "example": "x-api-key"
+              },
+              "value": {
+                "type": "string",
+                "description": "value of the `api_key`",
+                "example": "sUp3r-$eCr3t"
+              },
+              "in": {
+                "type": "string",
+                "description": "Type of param where `api_key` is signalled",
+                "enum": ["header"]
+              }
+            }
+          },
+          "assertion_jwt": {
+            "$ref": "#/components/schemas/AssertionJwt"
+          }
+        }
+      },
+      "ApiAuth": {
+        "type": "object",
+        "description": "External API authentication configuration. Only the following options are allowed: basic, api_key, mtls. It is not allowed to combine them. Please note that basic+mtls combination is shown in GET endpoints to ensure retrocompatibility in some environments already supported and shall not be used in new developments",
+        "properties": {
+          "basic": {
+            "type": "object",
+            "description": "Basic auth configuration",
+            "required": ["user", "password"],
+            "properties": {
+              "user": {
+                "type": "string"
+              },
+              "password": {
+                "type": "string"
+              }
+            }
+          },
+          "api_key": {
+            "type": "object",
+            "description": "Api key auth configuration",
+            "required": ["name", "value", "in"],
+            "properties": {
+              "name": {
+                "type": "string",
+                "example": "x-api-key"
+              },
+              "value": {
+                "type": "string",
+                "example": "sUp3r-$eCr3t"
+              },
+              "in": {
+                "type": "string",
+                "enum": ["header"]
+              }
+            }
+          },
+          "mtls": {
+            "type": "object",
+            "description": "mTLS (mutual TLS) auth configuration",
+            "required": ["client_certificate"],
+            "properties": {
+              "client_certificate": {
+                "type": "object",
+                "required": ["cert", "key"],
+                "properties": {
+                  "cert": {
+                    "type": "string",
+                    "description": "PEM-encoded public certificate chain of the SSL key pair",
+                    "example": "-----BEGIN CERTIFICATE-----\nMIIDxjCCAq4CAQEwDQYJ[...]ecBs/KmaIy0Q==\n-----END CERTIFICATE-----"
+                  },
+                  "key": {
+                    "type": "string",
+                    "description": "PEM-encoded private key of the SSL key pair",
+                    "example": "-----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEAuF+3m1JBhXM[...]kU5qAEoeSZxh\n-----END RSA PRIVATE KEY-----"
+                  }
+                }
+              },
+              "ca_certificates": {
+                "type": "array",
+                "description": "Array of PEM-encoded CA Certificates that are used to build the trust store while verifying upstream server's TLS certificate",
+                "items": {
+                  "type": "string"
+                },
+                "example": [
+                  "-----BEGIN CERTIFICATE-----\nMIIDKjCC…",
+                  "-----BEGIN CERTIFICATE-----\nPPAQDKjCC"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "BaikalApiDefinition": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "api_definition": {
+                "$ref": "#/components/schemas/ActionAnyContent"
+              },
+              "swagger": {
+                "$ref": "#/components/schemas/ActionAnyContent"
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/BaikalApiSummary"
+          }
+        ],
+        "example": {
+          "id": "userprofile",
+          "version": 3,
+          "title": "User Profile",
+          "description": "This API allows to retrieve the profile information of a user within the operator...",
+          "scopes": [
+            {
+              "id": "userprofile-search",
+              "name": "Search Userprofile",
+              "guards_personal_information": true
+            },
+            {
+              "id": "userprofile-search-name",
+              "name": "Search Userprofile Name",
+              "guards_personal_information": true
+            },
+            {
+              "id": "userprofile-search-id-document",
+              "name": "Search Userprofile ID Document",
+              "guards_personal_information": true
+            }
+          ],
+          "contact": {
+            "name": "Telefónica Kernel Team"
+          },
+          "api_definition": {
+            "swagger": "2.0",
+            "info": {
+              "description": "This API allows to retrieve the profile information of a user within the operator...",
+              "version": "3.4.2",
+              "title": "User Profile",
+              "termsOfService": "https://www.telefonica.es/es/",
+              "contact": {
+                "name": "Telefónica Kernel Team",
+                "email": "telefonica-kernel@tid.es"
+              }
+            },
+            "rest of api definition": "omitted from the example"
+          },
+          "verify_identifiers": true,
+          "enforce_id_bound_scopes": true,
+          "tags": {}
+        }
+      },
+      "ApiProvision": {
+        "description": "Specification of a version of an API to be provisioned in Telefónica Kernel",
+        "type": "object",
+        "properties": {
+          "definition_url": {
+            "description": "Accessible link to the definition of the API to be provisioned. One of `definition_url` or `swagger_url` must be defined",
+            "type": "string",
+            "format": "uri",
+            "example": "https://example.org/definition.json"
+          },
+          "swagger_url": {
+            "description": "Accessible link to the swagger specification of the API to be provisioned. One of `definition_url` or `swagger_url` must be defined.\nDISCLAIMER: This property is deprecated in favor of `definition_url` since `v2.33` of this API",
+            "type": "string",
+            "format": "uri",
+            "example": "https://example.org/swagger.json"
+          },
+          "auth": {
+            "$ref": "#/components/schemas/ApiAuth"
+          },
+          "cors": {
+            "$ref": "#/components/schemas/EnableCors"
+          },
+          "tags": {
+            "$ref": "#/components/schemas/Tags"
+          },
+          "verify_identifiers": {
+            "type": "boolean",
+            "default": true,
+            "description": "Flag to determine if the identities found in the request (oauth token and url path) must be validated against those in the [Telefonica Kernel User Profile API](https://developers.baikalplatform.com/apis/userprofile/)"
+          },
+          "enforce_id_bound_scopes": {
+            "type": "boolean",
+            "default": true,
+            "description": "Flag to determine whether in case of accessing the API with an scope included in identifier_bound_scopes list, identifier(s) in such list must be validated against a parameter of the API (such parameter labelled with x-fp-identifier)"
+          },
+          "audit_full_request": {
+            "type": "boolean",
+            "default": true,
+            "description": "Flag to determine if the request body of API requests (i.e. real API requests of the API this provision refers to) has to be audited or not"
+          }
+        }
+      },
+      "BaikalContact": {
+        "type": "object",
+        "description": "Object that represents the contact information related to an API",
+        "required": ["name"],
+        "properties": {
+          "name": {
+            "description": "Contact name for this API as specified in the swagger",
+            "type": "string"
+          }
+        }
+      },
+      "OperationAccepted": {
+        "type": "object",
+        "description": "This response means that the call was successful and the operation has started. You can track the status of the operation by using the operations endpoint in the [Telefonica Kernel Operations API](https://developers.baikalplatform.com/apis/operations/)",
+        "required": ["operation_id"],
+        "properties": {
+          "operation_id": {
+            "description": "The operation ID",
+            "type": "string"
+          }
+        }
+      },
+      "ResourceAccepted": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationAccepted"
+          },
+          {
+            "type": "object",
+            "description": "This response means that the call was successful and the resource operation has started. You can track the status of the operation by using the operations endpoint in the [Telefonica Kernel Operations API](https://developers.baikalplatform.com/apis/operations/)",
+            "required": ["resource_id"],
+            "properties": {
+              "resource_id": {
+                "type": "string",
+                "description": "Unique resource identifier"
+              }
+            }
+          }
+        ]
+      },
+      "EnableCors": {
+        "description": "Configuration to enable Cross-Origin Resource Sharing (CORS)",
+        "type": "object",
+        "required": ["methods", "headers", "exposed_headers", "origins"],
+        "properties": {
+          "origins": {
+            "type": "array",
+            "description": "List of allowed domains for the Access-Control-Allow-Origin header",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "description": "Value for the Access-Control-Allow-Origin header",
+              "minLength": 1,
+              "maxLength": 200
+            }
+          },
+          "methods": {
+            "type": "array",
+            "description": "List of allowed methods for the Access-Control-Allow-Methods header",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "description": "Value for the Access-Control-Allow-Methods header",
+              "minLength": 1,
+              "maxLength": 200
+            }
+          },
+          "headers": {
+            "type": "array",
+            "description": "List of allowed headers for the Access-Control-Allow-Headers header",
+            "items": {
+              "type": "string",
+              "description": "Value for the Access-Control-Allow-Headers header",
+              "minLength": 1,
+              "maxLength": 200
+            }
+          },
+          "exposed_headers": {
+            "type": "array",
+            "description": "List of exposed headers for the Access-Control-Expose-Headers header",
+            "items": {
+              "type": "string",
+              "description": "Value for the Access-Control-Expose-Headers header",
+              "minLength": 1,
+              "maxLength": 200
+            }
+          },
+          "credentials": {
+            "type": "boolean",
+            "default": true,
+            "description": "Flag to determine whether the Access-Control-Allow-Credentials header should be sent with true as the value"
+          },
+          "max_age": {
+            "type": "integer",
+            "default": 600,
+            "description": "Indicated how long the results of the preflight request can be cached, in seconds"
+          }
+        },
+        "example": {
+          "origins": ["*"],
+          "methods": ["GET", "POST"],
+          "headers": ["Authorization"],
+          "exposed_headers": ["X-correlator"],
+          "credentials": true,
+          "max_age": 600
+        }
+      },
+      "IssuerBase": {
+        "type": "object",
+        "description": "Base object for an issuer",
+        "properties": {
+          "public_key_rsa": {
+            "type": "string",
+            "description": "Public key in pem format with headers",
+            "example": "-----BEGIN PUBLIC KEY-----\nxxx\nyyy\n-----END PUBLIC KEY-----"
+          },
+          "jwks": {
+            "type": "string",
+            "description": "Jwks extracted from the public key",
+            "example": "{\"kty\":\"RSA\",\"e\":\"AQMB\",\"n\":\"vxSvLM_qZbP-3n2Q\"}"
+          },
+          "jwks_uri": {
+            "type": "string",
+            "format": "uri",
+            "description": "Public URL with public keys to enable JWT validation. This field is not compatible with 'secret' field. You can use one or the other but not both",
+            "example": "http://portal-backend:8080/jwks"
+          },
+          "tags": {
+            "$ref": "#/components/schemas/Tags"
+          }
+        }
+      },
+      "IssuerDefinition": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/IssuerBase"
+          },
+          {
+            "type": "object",
+            "required": ["id"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "example": "issuer",
+                "description": "Issuer identifier",
+                "format": "uri"
+              }
+            }
+          }
+        ]
+      },
+      "RoleBase": {
+        "type": "object",
+        "description": "Base object for a role",
+        "required": [
+          "minimum_loa",
+          "user_bound_scopes",
+          "identifier_bound_scopes"
+        ],
+        "properties": {
+          "minimum_loa": {
+            "$ref": "#/components/schemas/LevelOfAssurance"
+          },
+          "user_bound_scopes": {
+            "type": "array",
+            "description": "List of user bound scopes. Determine the resources of the user (i.e. of any identifier of the user) that are accessible when the role is activated",
+            "items": {
+              "type": "string",
+              "description": "User bound scope"
+            },
+            "example": [
+              "bill_details",
+              "invoice-shipment-phone-number-read",
+              "legados-offers-read",
+              "userprofile-search-name",
+              "product-offers-user-read"
+            ]
+          },
+          "identifier_bound_scopes": {
+            "type": "array",
+            "description": "List of identifier bound scopes. Determine the resources associated to a specific user's identifier (e.g. a specific line) that are accessible when the role is activated",
+            "items": {
+              "type": "string",
+              "description": "Identifier bound scope"
+            },
+            "example": [
+              "clients-identifier-consents-create",
+              "clients-identifier-consents-read",
+              "identifier-consents-update"
+            ]
+          },
+          "role_bound_scopes": {
+            "type": "array",
+            "description": "List of role bound scopes. Determine the resources associated to a list of identifiers that share a given role, that are accessible, for that list of identifiers, when the role is activated",
+            "default": [],
+            "items": {
+              "type": "string",
+              "description": "Role bound scope"
+            },
+            "example": ["invoicing-read", "invoicing-phone-number-read"]
+          },
+          "tags": {
+            "$ref": "#/components/schemas/Tags"
+          }
+        }
+      },
+      "Role": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RoleBase"
+          },
+          {
+            "type": "object",
+            "required": ["id"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Role identifier",
+                "pattern": "^[a-zA-Z-:_0-9]{1,200}$",
+                "example": "user"
+              }
+            }
+          }
+        ]
+      },
+      "LevelOfAssurance": {
+        "type": "string",
+        "enum": ["1", "2", "3", "4"],
+        "description": "Level of Assurance"
+      },
+      "DatasetContact": {
+        "type": "object",
+        "description": "Object that represents the contact information related to a dataset",
+        "required": ["name", "email"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Dataset contact name",
+            "example": "John Doe",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "Dataset contact email",
+            "example": "john.doe@example.org",
+            "minLength": 1,
+            "maxLength": 200
+          }
+        }
+      },
+      "StorageType": {
+        "type": "string",
+        "enum": ["batch", "projection"],
+        "description": "The storage definition depends on [storage type](https://developers.baikalplatform.com/docs/datasets/storage-types/).\nSee models:\n* `batch`: BatchStorage\n* `projection`: ProjectionStorage"
+      },
+      "DatasetBase": {
+        "type": "object",
+        "description": "Base object for a dataset",
+        "required": [
+          "id",
+          "title",
+          "description",
+          "contact",
+          "storage",
+          "contains_personal_information"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Dataset identifier",
+            "pattern": "^[a-zA-Z0-9]{1,200}$",
+            "minLength": 4,
+            "example": "smartsteps"
+          },
+          "title": {
+            "type": "string",
+            "description": "Human-readable dataset title",
+            "example": "Smart Steps",
+            "minLength": 1
+          },
+          "description": {
+            "type": "string",
+            "description": "Human-readable dataset description",
+            "example": "We use our platform to draw out insights about the global trends of groups of people, thus helping organizations to optimize their value proposition.",
+            "minLength": 1
+          },
+          "contact": {
+            "$ref": "#/components/schemas/DatasetContact"
+          },
+          "storage": {
+            "$ref": "#/components/schemas/StorageType"
+          },
+          "contains_personal_information": {
+            "$ref": "#/components/schemas/ContainsPersonalInformation"
+          },
+          "storage_config": {
+            "$ref": "#/components/schemas/StorageConfig"
+          },
+          "tags": {
+            "$ref": "#/components/schemas/Tags"
+          }
+        }
+      },
+      "DatasetScopes": {
+        "type": "object",
+        "deprecated": true,
+        "description": "Read and write scopes of the dataset. Included for non-personal information datasets (superseded by `DatasetNonPiScopes`)",
+        "required": ["read", "write"],
+        "properties": {
+          "read": {
+            "type": "string",
+            "description": "Scope to use for read operations in the [Telefonica Kernel Data API](https://developers.baikalplatform.com/apis/data/)",
+            "example": "data:apiOperation:read"
+          },
+          "write": {
+            "type": "string",
+            "description": "Scope to use for write operations in the [Telefonica Kernel Data API](https://developers.baikalplatform.com/apis/data/)",
+            "example": "data:apiOperation:write"
+          }
+        }
+      },
+      "DatasetNonPiScopes": {
+        "type": "object",
+        "description": "Read and write scopes of the dataset. Included for non-personal information datasets or for DirectSQL aggregated queries on personal information datasets",
+        "required": ["read", "write"],
+        "properties": {
+          "read": {
+            "type": "string",
+            "description": "Scope to use for read operations in the [Telefonica Kernel Data API](https://developers.baikalplatform.com/apis/data/)",
+            "example": "data:smartsteps:read"
+          },
+          "write": {
+            "type": "string",
+            "description": "Scope to use for write operations in the [Telefonica Kernel Data API](https://developers.baikalplatform.com/apis/data/)",
+            "example": "data:smartsteps:write"
+          }
+        }
+      },
+      "DatasetVersionScopes": {
+        "type": "object",
+        "deprecated": true,
+        "description": "Read and write scopes of the dataset version. Included for non-personal information datasets (superseded by `DatasetVersionNonPiScopes`)",
+        "required": ["read", "write"],
+        "properties": {
+          "read": {
+            "type": "string",
+            "description": "Scope to use for read operations in the [Telefonica Kernel Data API](https://developers.baikalplatform.com/apis/data/)"
+          },
+          "write": {
+            "type": "string",
+            "description": "Scope to use for write operations in the [Telefonica Kernel Data API](https://developers.baikalplatform.com/apis/data/)"
+          }
+        }
+      },
+      "DatasetVersionNonPiScopes": {
+        "type": "object",
+        "description": "Read and write scopes of the dataset version. Included for non-personal information datasets or for DirectSQL aggregated queries on personal information datasets",
+        "required": ["read", "write"],
+        "properties": {
+          "read": {
+            "type": "string",
+            "description": "Scope to use for read operations in the [Telefonica Kernel Data API](https://developers.baikalplatform.com/apis/data/)",
+            "example": "data:smartsteps:2:read"
+          },
+          "write": {
+            "type": "string",
+            "description": "Scope to use for write operations in the [Telefonica Kernel Data API](https://developers.baikalplatform.com/apis/data/)",
+            "example": "data:smartsteps:2:write"
+          }
+        }
+      },
+      "DatasetVersionPiScopes": {
+        "type": "object",
+        "description": "Read and write pi-scopes of the dataset version. Included for personal information datasets",
+        "required": ["read", "write"],
+        "properties": {
+          "read": {
+            "type": "string",
+            "description": "Scope to use for read operations in the [Telefonica Kernel Data API](https://developers.baikalplatform.com/apis/data/)",
+            "example": "geolocation-read"
+          },
+          "write": {
+            "type": "string",
+            "description": "Scope to use for write operations in the [Telefonica Kernel Data API](https://developers.baikalplatform.com/apis/data/)",
+            "example": "geolocation-write"
+          }
+        }
+      },
+      "Dataset": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/DatasetBase"
+          },
+          {
+            "type": "object",
+            "required": ["non_pi_scopes", "versions"],
+            "properties": {
+              "scopes": {
+                "$ref": "#/components/schemas/DatasetScopes"
+              },
+              "non_pi_scopes": {
+                "$ref": "#/components/schemas/DatasetNonPiScopes"
+              },
+              "versions": {
+                "type": "array",
+                "description": "The list of dataset versions",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "version": {
+                      "type": "integer",
+                      "example": 2
+                    },
+                    "full_version": {
+                      "type": "string",
+                      "example": "2.14.5"
+                    },
+                    "namespace": {
+                      "type": "string",
+                      "example": "com.telefonica.mobile"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "DatasetVersionSchema": {
+        "type": "object",
+        "description": "A valid Avro4p v1.1 schema specification",
+        "example": {
+          "x-fp-version": "1.5.23-BETA",
+          "type": "record",
+          "name": "MyData",
+          "fields": [
+            {
+              "name": "id",
+              "type": "string",
+              "x-fp-data-protection": "pseudonymize"
+            },
+            {
+              "name": "data_limit",
+              "type": ["null", "int"],
+              "default": null
+            }
+          ]
+        }
+      },
+      "StorageConfig": {
+        "type": "object",
+        "required": ["type"],
+        "discriminator": {
+          "propertyName": "type"
+        },
+        "description": "Optional parameter containing storage metainformation. Only valid for ProjectionStorage storage",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "The type of the storage configuration",
+            "enum": ["projection_storage"]
+          }
+        }
+      },
+      "projection_storage": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/StorageConfig"
+          },
+          {
+            "type": "object",
+            "required": ["dataset_id"],
+            "properties": {
+              "dataset_id": {
+                "type": "string",
+                "description": "Dataset identifier from where data will be projected",
+                "example": "Call_CDR"
+              }
+            }
+          }
+        ]
+      },
+      "Storage": {
+        "type": "object",
+        "description": "Storage specification for a dataset",
+        "required": ["type"],
+        "discriminator": {
+          "propertyName": "type"
+        },
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "The type of storage",
+            "enum": ["batch", "projection"]
+          }
+        }
+      },
+      "batch": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Storage"
+          },
+          {
+            "type": "object",
+            "required": ["partitions_by", "sorted_by"],
+            "properties": {
+              "partitions_by": {
+                "type": "array",
+                "description": "Sorted list of the dataset fields storage partition /field_1/.../field_N",
+                "items": {
+                  "type": "string"
+                },
+                "example": ["KEY_FIELD_1", "KEY_FIELD_N"]
+              },
+              "sorted_by": {
+                "type": "array",
+                "description": "Sorted list of the sort condition of dataset",
+                "items": {
+                  "type": "string"
+                },
+                "example": ["FIELD_1", "FIELD_N"]
+              },
+              "z_ordered_by": {
+                "type": "array",
+                "description": "Sorted list of the z-order grouping columns of dataset",
+                "items": {
+                  "type": "string"
+                },
+                "example": ["FIELD_1", "FIELD_N"]
+              },
+              "max_file_size": {
+                "type": "integer",
+                "description": "Maximum each file size after delta table optimization",
+                "minimum": 10,
+                "maximum": 3072,
+                "default": 128,
+                "example": [128]
+              }
+            }
+          }
+        ]
+      },
+      "projection": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Storage"
+          },
+          {
+            "type": "object",
+            "required": ["dataset_version"],
+            "properties": {
+              "dataset_version": {
+                "type": "number",
+                "description": "Version identifier of the dataset from where data will be projected",
+                "example": "5"
+              }
+            }
+          }
+        ]
+      },
+      "date_partition": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/softDelete"
+          },
+          {
+            "type": "object",
+            "required": ["retention_duration"],
+            "properties": {
+              "retention_duration": {
+                "type": "string",
+                "description": "Retention period in [ISO-8601](https://en.wikipedia.org/wiki/ISO_8601) format for soft delete",
+                "example": "P30D"
+              }
+            }
+          }
+        ]
+      },
+      "softDelete": {
+        "type": "object",
+        "required": ["based_on"],
+        "discriminator": {
+          "propertyName": "based_on"
+        },
+        "description": "The soft delete definition depends on `based_on` parameter.\nEach `based_on` will contain the period that the retention policy will apply.\nSee model:\n* `date_partition`: DateBasedSoftDeletionPolicy model,than contains a [ISO-8601](https://en.wikipedia.org/wiki/ISO_8601) period format.\n   This case means soft deletion is performed based on the date type field that partitions the dataset",
+        "properties": {
+          "based_on": {
+            "type": "string",
+            "description": "type of retention policy",
+            "enum": ["date_partition"]
+          }
+        }
+      },
+      "RetentionPolicy": {
+        "type": "object",
+        "required": ["soft_delete", "vacuum"],
+        "description": "Optional parameter containing retention policy metainformation",
+        "properties": {
+          "soft_delete": {
+            "$ref": "#/components/schemas/softDelete"
+          },
+          "vacuum": {
+            "type": "string",
+            "description": "The period in [ISO-8601](https://en.wikipedia.org/wiki/ISO_8601) format of the retention policy where data is kept until is physically deleted",
+            "example": "P60D"
+          }
+        }
+      },
+      "DatasetVersionBase": {
+        "type": "object",
+        "description": "Base object for a dataset version",
+        "required": ["schema", "storage"],
+        "properties": {
+          "frequency": {
+            "type": "string",
+            "enum": ["hour", "day", "week", "month", "year", "absolute"],
+            "description": "Determines how data gets bucketed across the time dimension",
+            "example": "hour"
+          },
+          "recency": {
+            "type": "string",
+            "description": "Max diff between current date and timestamp of the last record of the dataset. Valid values 'real_time', 'change_data_capture' and some [ISO-8601](https://en.wikipedia.org/wiki/ISO_8601) period format",
+            "example": "PT1H"
+          },
+          "schema": {
+            "$ref": "#/components/schemas/DatasetVersionSchema"
+          },
+          "storage": {
+            "$ref": "#/components/schemas/Storage"
+          },
+          "retention_policy": {
+            "$ref": "#/components/schemas/RetentionPolicy"
+          }
+        }
+      },
+      "DatasetVersion": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/DatasetVersionBase"
+          },
+          {
+            "type": "object",
+            "required": [
+              "id",
+              "version",
+              "stored_with_logical_types",
+              "non_pi_scopes"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Dataset/Version identifier",
+                "pattern": "^[a-zA-Z-:_0-9]{1,200}![0-9]{1,3}",
+                "example": "smartsteps!2"
+              },
+              "dataset_id": {
+                "type": "string",
+                "description": "Dataset identifier",
+                "pattern": "^[a-zA-Z-:_0-9]{1,200}$",
+                "example": "smartsteps"
+              },
+              "version": {
+                "type": "number",
+                "description": "Dataset version identifier",
+                "example": "2"
+              },
+              "not_informed_schema": {
+                "$ref": "#/components/schemas/DatasetVersionSchema"
+              },
+              "stored_with_logical_types": {
+                "type": "boolean",
+                "description": "Define if this version of the dataset is stored applying logical types"
+              },
+              "scopes": {
+                "$ref": "#/components/schemas/DatasetVersionScopes"
+              },
+              "non_pi_scopes": {
+                "$ref": "#/components/schemas/DatasetVersionNonPiScopes"
+              },
+              "pi_scopes": {
+                "$ref": "#/components/schemas/DatasetVersionPiScopes"
+              }
+            }
+          }
+        ]
+      },
+      "DatasetVersionCreationRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/DatasetVersionBase"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "pi_scopes": {
+                "$ref": "#/components/schemas/DatasetVersionPiScopes"
+              },
+              "allow_not_informed_data": {
+                "type": "boolean",
+                "description": "Define if this version of the dataset allows not-informed data",
+                "default": false
+              }
+            }
+          }
+        ]
+      },
+      "Tags": {
+        "type": "object",
+        "description": "Map of the tags",
+        "minProperties": 0,
+        "maxProperties": 50,
+        "additionalProperties": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 256
+        }
+      },
+      "ContainsPersonalInformation": {
+        "type": "boolean",
+        "description": "A boolean value indicating whether the dataset contains personal information. If it does, then the schemas used for this dataset will be able to contain the personal information extensions in Avro4p. Additionally, datasets that contain personal information can only be accessed through pi-scopes, or through non-pi-scopes when involved in a DirectSQL aggregated query"
+      },
+      "DatasetValidationSource": {
+        "type": "object",
+        "description": "Source for a dataset version validation",
+        "required": ["name", "dataset_id", "dataset_version"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of source. It is used to create SparkSQL temp table",
+            "example": "Customer_Daily_5_data"
+          },
+          "dataset_id": {
+            "type": "string",
+            "description": "Dataset ID",
+            "example": "Customer_Daily"
+          },
+          "dataset_version": {
+            "type": "integer",
+            "description": "Dataset major version",
+            "example": 5
+          }
+        }
+      },
+      "DatasetValidationBase": {
+        "type": "object",
+        "description": "Base object for a dataset version validation",
+        "required": ["description", "sql", "metrics"],
+        "properties": {
+          "description": {
+            "type": "string",
+            "description": "Validation human description",
+            "example": "formula get count when field1 == field",
+            "minLength": 1,
+            "maxLength": 1000
+          },
+          "malformed_included": {
+            "type": "boolean",
+            "description": "Defines if the datasets contain malformed data or not",
+            "default": false
+          },
+          "field": {
+            "type": "string",
+            "description": "Field where the validation applies",
+            "example": "OPERATOR_ID"
+          },
+          "sources": {
+            "type": "array",
+            "description": "Additional dataset sources",
+            "items": {
+              "$ref": "#/components/schemas/DatasetValidationSource"
+            }
+          },
+          "sql": {
+            "type": "string",
+            "description": "SQL sentence",
+            "example": "SELECT COUNT(*) AS count FROM ( SELECT OPERATOR_ID,MONTH_DT,avg(COUNT) AS AVG_COUNT FROM operator_avg_count_daily_more_than_50 GROUP BY OPERATOR_ID, MONTH_DT HAVING AVG_COUNT > 50 )"
+          },
+          "metrics": {
+            "type": "array",
+            "description": "List of columns to get the result from",
+            "items": {
+              "type": "string",
+              "description": "Column name"
+            },
+            "example": ["count"]
+          }
+        }
+      },
+      "DatasetValidation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/DatasetValidationBase"
+          },
+          {
+            "type": "object",
+            "required": ["id", "dataset_id", "dataset_version"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Validation identifier",
+                "pattern": "^[a-zA-Z0-9]{1,200}$",
+                "minLength": 4,
+                "example": "formula001"
+              },
+              "dataset_id": {
+                "type": "string",
+                "description": "Dataset identifier",
+                "pattern": "^[a-zA-Z0-9]{1,200}$",
+                "minLength": 4,
+                "example": "Customer"
+              },
+              "dataset_version": {
+                "type": "number",
+                "description": "Dataset version identifier",
+                "example": 5
+              }
+            }
+          }
+        ]
+      },
+      "DatasetValidationCreationRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/DatasetValidationBase"
+          },
+          {
+            "type": "object",
+            "required": ["id"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Validation identifier",
+                "pattern": "^[a-zA-Z0-9]{1,200}$",
+                "minLength": 4,
+                "example": "formula001"
+              }
+            }
+          }
+        ]
+      },
+      "InvalidArgument": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ModelError"
+          },
+          {
+            "type": "object",
+            "required": ["code"],
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": ["INVALID_ARGUMENT"],
+                "description": "Client specified an invalid argument, request body or query param."
+              }
+            }
+          }
+        ]
+      },
+      "Unauthenticated": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ModelError"
+          },
+          {
+            "type": "object",
+            "required": ["code"],
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": ["UNAUTHENTICATED"],
+                "description": "Request not authenticated due to missing, invalid, or expired credentials."
+              }
+            }
+          }
+        ]
+      },
+      "PermissionDenied": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ModelError"
+          },
+          {
+            "type": "object",
+            "required": ["code"],
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": ["PERMISSION_DENIED"],
+                "description": "Client does not have sufficient permissions to perform this action."
+              }
+            }
+          }
+        ]
+      },
+      "NotFound": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ModelError"
+          },
+          {
+            "type": "object",
+            "required": ["code"],
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": ["NOT_FOUND"],
+                "description": "The specified resource is not found"
+              }
+            }
+          }
+        ]
+      },
+      "AlreadyExists": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ModelError"
+          },
+          {
+            "type": "object",
+            "required": ["code"],
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": ["ALREADY_EXISTS"],
+                "description": "The resource that a client tried to create already exists."
+              }
+            }
+          }
+        ]
+      },
+      "FailedPrecondition": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ModelError"
+          },
+          {
+            "type": "object",
+            "required": ["code"],
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": ["FAILED_PRECONDITION"],
+                "description": "Request cannot be executed in the current system state."
+              }
+            }
+          }
+        ]
+      },
+      "Internal": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ModelError"
+          },
+          {
+            "type": "object",
+            "required": ["code"],
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": ["INTERNAL"],
+                "description": "Unknown server error.Typically a server bug."
+              }
+            }
+          }
+        ]
+      },
+      "Unavailable": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ModelError"
+          },
+          {
+            "type": "object",
+            "required": ["code"],
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": ["UNAVAILABLE"],
+                "description": "Service unavailable"
+              }
+            }
+          }
+        ]
+      },
+      "Timeout": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ModelError"
+          },
+          {
+            "type": "object",
+            "required": ["code"],
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": ["TIMEOUT"],
+                "description": "Request timeout exceeded"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "responses": {
+      "Error400InvalidArgument": {
+        "description": "Problem with the client request.",
+        "headers": {
+          "x-correlator": {
+            "$ref": "#/components/headers/x-correlator"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/InvalidArgument"
+            },
+            "example": {
+              "code": "INVALID_ARGUMENT",
+              "message": "Client specified an invalid argument"
+            }
+          }
+        }
+      },
+      "Error401Unauthenticated": {
+        "description": "Request not authenticated due to missing, invalid, or expired credentials.",
+        "headers": {
+          "x-correlator": {
+            "$ref": "#/components/headers/x-correlator"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Unauthenticated"
+            },
+            "example": {
+              "code": "UNAUTHENTICATED",
+              "message": "Client not authenticated"
+            }
+          }
+        }
+      },
+      "Error403PermissionDenied": {
+        "description": "Client does not have sufficient permission.",
+        "headers": {
+          "x-correlator": {
+            "$ref": "#/components/headers/x-correlator"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/PermissionDenied"
+            },
+            "example": {
+              "code": "PERMISSION_DENIED",
+              "message": "Client does not have sufficient permissions to perform this action."
+            }
+          }
+        }
+      },
+      "Error404NotFound": {
+        "description": "Resource Not Found.",
+        "headers": {
+          "x-correlator": {
+            "$ref": "#/components/headers/x-correlator"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/NotFound"
+            },
+            "example": {
+              "code": "NOT_FOUND",
+              "message": "A specified resource is not found"
+            }
+          }
+        }
+      },
+      "Error409AlreadyExists": {
+        "description": "The resource already exists.",
+        "headers": {
+          "x-correlator": {
+            "$ref": "#/components/headers/x-correlator"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/AlreadyExists"
+            },
+            "example": {
+              "code": "ALREADY_EXISTS",
+              "message": "A specified resource already exists"
+            }
+          }
+        }
+      },
+      "Error412FailedPrecondition": {
+        "description": "Request cannot be executed in the current system state.",
+        "headers": {
+          "x-correlator": {
+            "$ref": "#/components/headers/x-correlator"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/FailedPrecondition"
+            },
+            "example": {
+              "code": "FAILED_PRECONDITION",
+              "message": "Request cannot be executed in the current system state"
+            }
+          }
+        }
+      },
+      "Error500Internal": {
+        "description": "Server error.",
+        "headers": {
+          "x-correlator": {
+            "$ref": "#/components/headers/x-correlator"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Internal"
+            },
+            "example": {
+              "code": "INTERNAL",
+              "message": "Server error"
+            }
+          }
+        }
+      },
+      "Error503Unavailable": {
+        "description": "Service unavailable. Typically the server is down.",
+        "headers": {
+          "x-correlator": {
+            "$ref": "#/components/headers/x-correlator"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Unavailable"
+            },
+            "example": {
+              "code": "UNAVAILABLE",
+              "message": "Service unavailable"
+            }
+          }
+        }
+      },
+      "Error504Timeout": {
+        "description": "Request time exceeded. If it happens repeatedly, consider reducing the request complexity.",
+        "headers": {
+          "x-correlator": {
+            "$ref": "#/components/headers/x-correlator"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Timeout"
+            },
+            "example": {
+              "code": "TIMEOUT",
+              "message": "Request timeout exceeded. Try it later"
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "client_credentials": {
+        "type": "oauth2",
+        "flows": {
+          "clientCredentials": {
+            "tokenUrl": "https://auth.baikalplatform.com/token",
+            "scopes": {
+              "admin:datasets:create": "Permission to create or update Telefónica Kernel datasets",
+              "admin:datasets:validations:read": "Permission to read information about Telefónica Kernel dataset validations",
+              "admin:apps:update": "Permission to update information about Telefónica Kernel apps",
+              "admin:issuers:read": "Permission to read information about the issuers of Telefónica Kernel",
+              "admin:issuers:delete": "Permission to delete information about the issuers of Telefónica Kernel",
+              "admin:apis:read": "Permission to read information about Telefónica Kernel APIs",
+              "admin:datasets:read": "Permission to read information about Telefónica Kernel datasets",
+              "admin:datasets:validations:create": "Permission to create Telefónica Kernel dataset validations",
+              "admin:role:update": "Permission to update information about the roles of Telefónica Kernel",
+              "admin:apis:update": "Permission to update information about Telefónica Kernel APIs",
+              "admin:issuers:update": "Permission to update information about the issuers of Telefónica Kernel",
+              "admin:issuers:create": "Permission to create information about the issuers of Telefónica Kernel",
+              "admin:apps:delete": "Permission to delete information about Telefónica Kernel apps",
+              "admin:apps:deactivate": "Permission to deactivate an exiting app in Telefónica Kernel",
+              "admin:datasets:validations:delete": "Permission to delete Telefónica Kernel dataset validations",
+              "admin:apps:update:internal": "Permission to update information about Telefónica Kernel internal apps",
+              "admin:apis:delete": "Permission to delete information about Telefónica Kernel APIs",
+              "admin:apps:read:self": "Permission to read information about Telefónica Kernel apps of a certain owner",
+              "admin:apps:activate": "Permission to activate an exiting app in Telefónica Kernel",
+              "admin:role:read": "Permission to read information about the roles of Telefónica Kernel",
+              "admin:apps:create": "Permission to create information about Telefónica Kernel apps",
+              "admin:apis:create": "Permission to create information about Telefónica Kernel APIs",
+              "admin:role:create": "Permission to create information about the roles of Telefónica Kernel",
+              "admin:datasets:delete": "Permission to delete Telefónica Kernel datasets",
+              "admin:apps:read": "Permission to read information about Telefónica Kernel apps",
+              "admin:role:delete": "Permission to delete information about the roles of Telefónica Kernel",
+              "admin:apps:create:internal": "Permision to create information about Telefónica Kernel internal apps"
+            }
+          }
+        }
+      }
+    },
+    "parameters": {
+      "x-correlator": {
+        "name": "x-correlator",
+        "in": "header",
+        "schema": {
+          "type": "string"
+        },
+        "description": "Correlation id for the different services",
+        "example": "744596ed-38d2-44e9-8b94-e7377c7d5664"
+      },
+      "ResourceId": {
+        "name": "id",
+        "in": "path",
+        "description": "The [percent-encoded](https://tools.ietf.org/html/rfc3986#section-2.1) id of the resource",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "pattern": "^[a-zA-Z-:_0-9]{1,200}$"
+        }
+      },
+      "VersionId": {
+        "name": "version",
+        "in": "path",
+        "description": "The numeric version of resource",
+        "required": true,
+        "schema": {
+          "type": "number"
+        }
+      },
+      "ValidationId": {
+        "name": "validationId",
+        "in": "path",
+        "description": "The [percent-encoded](https://tools.ietf.org/html/rfc3986#section-2.1) id of the resource",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "pattern": "^[a-zA-Z-:_0-9]{1,200}$"
+        }
+      },
+      "ApiId": {
+        "name": "api_id",
+        "in": "path",
+        "description": "Identifier of the API. As it appears in the path for invocation, e.g. userprofile, mobile-quota, etc. Several versions for the same API identifier can be registered in Telefónica Kernel",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "ApiVersion": {
+        "name": "api_version",
+        "in": "path",
+        "description": "Version of the API. Several versions for the same API identifier can be registered in Telefónica Kernel",
+        "required": true,
+        "schema": {
+          "type": "number"
+        }
+      },
+      "TagFilter": {
+        "name": "tags",
+        "in": "query",
+        "description": "Enables tag-based filtering for the query. This parameter is optional, and can appear multiple times. If so, only the entities matching all tags will be returned (i.e. logic AND). Tags content are key-value pairs separated by dots where at least the key is required (e.g. _?tags=qa&tags=owner.azure_)",
+        "required": false,
+        "schema": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "style": "form",
+        "explode": true
+      },
+      "LegalEntityFilter": {
+        "name": "legal_entity_id",
+        "in": "query",
+        "description": "Identifier of a legal entity. This parameter is optional, and it can be an array of data separated by commas. It will run like an OR command (e.g. _?legal_entity_id=telefonica,microsoft). This example will return all the resources that belong to Telefonica or Microsoft",
+        "required": false,
+        "explode": false,
+        "schema": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "LegalEntityNegationFilter": {
+        "name": "legal_entity_id.neq",
+        "in": "query",
+        "description": "Identifier of a legal entity. This parameter is optional, and it can be an array of data separated by commas. It will run like an NOR command (e.g. _?legal_entity_id.neq=telefonica,microsoft). This example will return all the resources that do not belong to Telefonica nor Microsoft",
+        "required": false,
+        "explode": false,
+        "schema": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "PurposeFilter": {
+        "name": "purpose_id",
+        "in": "query",
+        "description": "Identifier of a purpose. This parameter is optional, and it can be an array of data separated by commas. It will run like an OR command (e.g. _?purpose_id=purpose1,purpose2). This example will return all the resources that belong to purpose1 or purpose2",
+        "required": false,
+        "explode": false,
+        "schema": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "PurposeNegationFilter": {
+        "name": "purpose_id.neq",
+        "in": "query",
+        "description": "Identifier of a purpose. This parameter is optional, and it can be an array of data separated by commas. It will run like an NOR command (e.g. _?purpose_id.neq=purpose1,purpose2). This example will return all the resources that do not belong to purpose1 nor purpose2",
+        "required": false,
+        "explode": false,
+        "schema": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.global-int-current.baikalplatform.com/admin/v2"
+    }
+  ]
+}

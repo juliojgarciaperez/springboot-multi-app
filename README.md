@@ -33,3 +33,29 @@ This project demonstrates how to work with a mono-repo/mono-project approach in 
 ---
 
 This setup allows for efficient development and maintenance of multiple microservices within a single Spring Boot project, leveraging shared resources and streamlined workflows.
+
+## RabbitMQ and Retry Mechanism
+
+Async tasks using RabbitMQ and retries with delay, without blocking spring app threads.
+
+Check example on [FooWorker.kt](https://github.com/juliojgarciaperez/springboot-multi-app/blob/main/src/main/kotlin/com/example/ogex/apps/fooworker/FooWorker.kt)
+
+### IDEA
+
+Given a main queue "X" and its associated Dead Letter Queue "X.DLQ" in RabbitMQ:
+
+1. When a message is processed successfully, it is acknowledged and removed from queue X.
+
+2. If message processing fails and default-requeue-rejected is disabled, the message is rejected and routed to X.DLQ.
+
+3. The X.DLQ queue is configured with a TTL (Time-To-Live), causing messages to expire after a set duration.
+
+4. No consumers will process messages directly from X.DLQ. Instead, X.DLQ is configured with "X" as its own Dead Letter Exchange (DLX), so expired messages are automatically routed back to the main queue X.
+
+5. Upon re-entry to X, each message will include an x-death header containing metadata such as the number of delivery attempts.
+
+6. The message handler can inspect this header to determine how many times the message has been retried and decide whether to continue processing or discard the message.
+
+### Auto Configuration
+
+TODO: think on how to create queue and dlq automatically, based on configuration file.

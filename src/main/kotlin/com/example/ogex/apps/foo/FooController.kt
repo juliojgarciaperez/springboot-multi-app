@@ -11,7 +11,7 @@ class FooController(private val rabbitSender: RabbitSender) {
     @GetMapping("/foo")
     fun getFoo(): Map<String, String> {
         val uuid = java.util.UUID.randomUUID().toString()
-        rabbitSender.sendToQueue("fooQueue", "Hello from FooController: $uuid")
+        rabbitSender.sendToQueue("main.queue", "Hello from FooController: $uuid")
 
         return mapOf("message" to say("foo"))
     }
